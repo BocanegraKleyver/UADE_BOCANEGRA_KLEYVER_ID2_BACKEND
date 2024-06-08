@@ -1,0 +1,100 @@
+GETALL
+http://localhost:8080/api/producto
+
+GETID
+http://localhost:8080/api/producto/id
+
+POST
+http://localhost:8080/api/producto
+
+{
+    "nombre": "Silla Gamer X300",
+    "descripcion": "Silla gamer ergonómica con soporte lumbar y reposabrazos ajustables. ¡Ahora en versión mejorada!",
+    "precio": 350,
+    "imagenes": [
+        "https://ejemplo.com/imagen1.jpg",
+        "https://ejemplo.com/imagen2.jpg",
+        "https://ejemplo.com/imagen3.jpg"
+    ],
+    "comentarios": [
+        "Excelente silla",
+        "Muy cómoda"
+    ],
+    "videos": [
+        "https://ejemplo.com/video1.mp4",
+        "https://ejemplo.com/video2.mp4"
+    ]
+}
+
+{
+    "nombre": "Silla Gamer X200",
+    "descripcion": "Silla gamer ergonómica con soporte lumbar y reposabrazos ajustables.",
+    "precio": 300,
+    "imagenes": [
+        "/src/assets/img/SillaGamer/Silla_Gamer_1.jpg",
+        "/src/assets/img/SillaGamer/Silla_Gamer_2.jpg"
+    ],
+    "comentarios": [],
+    "videos": [
+        "https://ejemplo.com/video1.mp4",
+        "https://ejemplo.com/video2.mp4"
+    ]
+}
+
+{
+    "nombre": "Silla de Comedor Clásica",
+    "descripcion": "Silla de comedor clásica con respaldo de madera y asiento acolchado.",
+    "precio": 150,
+    "imagenes": [
+        "https://ejemplo.com/silla_comedor_1.jpg",
+        "https://ejemplo.com/silla_comedor_2.jpg"
+    ],
+    "comentarios": [],
+    "videos": []
+}
+
+{
+    "nombre": "Silla de Jardín Plegable",
+    "descripcion": "Silla de jardín plegable de aluminio resistente a la intemperie.",
+    "precio": 80,
+    "imagenes": [
+        "https://ejemplo.com/silla_jardin_1.jpg",
+        "https://ejemplo.com/silla_jardin_2.jpg"
+    ],
+    "comentarios": [],
+    "videos": []
+}
+
+{
+    "nombre": "Silla Gamer Elite X500",
+    "descripcion": "Silla gamer de alta gama con diseño ergonómico y luces LED integradas.",
+    "precio": 500,
+    "imagenes": [
+        "https://ejemplo.com/silla_gamer_1.jpg",
+        "https://ejemplo.com/silla_gamer_2.jpg"
+    ],
+    "comentarios": [],
+    "videos": [
+        "https://ejemplo.com/video1.mp4",
+        "https://ejemplo.com/video2.mp4"
+    ]
+}
+
+{
+    "nombre": "Silla de Comedor Moderna",
+    "descripcion": "Silla de comedor moderna con estructura de metal y asiento de cuero sintético.",
+    "precio": 180,
+    "imagenes": [
+        "https://ejemplo.com/silla_comedor_moderna_1.jpg",
+        "https://ejemplo.com/silla_comedor_moderna_2.jpg"
+    ],
+    "comentarios": [],
+    "videos": []
+}
+
+
+PUT
+http://localhost:8080/api/producto/id
+
+DELETE
+http://localhost:8080/api/producto/id

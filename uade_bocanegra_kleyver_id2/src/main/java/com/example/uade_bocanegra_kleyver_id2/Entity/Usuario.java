@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Usuario {
 
     @Id
-    private Object id; // Mantenemos Object para el id
+    private String id; // Cambiamos el tipo de id a String
 
     private String nombre;
     private String direccion;
@@ -27,7 +27,7 @@ public class Usuario {
     // Constructor con todos los atributos
     @JsonCreator
     public Usuario(
-            @JsonProperty("id") Object id,
+            @JsonProperty("id") String id, // Cambiamos el tipo de id a String
             @JsonProperty("nombre") String nombre,
             @JsonProperty("direccion") String direccion,
             @JsonProperty("documentoIdentidad") String documentoIdentidad,
@@ -46,11 +46,11 @@ public class Usuario {
     }
 
     // Getters y Setters
-    public Object getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Object id) {
+    public void setId(String id) {
         this.id = id;
     }
 

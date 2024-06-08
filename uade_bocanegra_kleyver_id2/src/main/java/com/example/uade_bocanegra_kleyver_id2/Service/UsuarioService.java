@@ -3,7 +3,6 @@ package com.example.uade_bocanegra_kleyver_id2.Service;
 import java.util.List;
 import java.util.Objects;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +26,7 @@ public class UsuarioService {
     public Usuario getUsuarioById(String id) {
         Usuario usuario = usuarioCacheService.getFromCache(id);
         if (usuario == null) {
-            ObjectId objectId = new ObjectId(id);
-            usuario = usuarioRepository.findById(objectId).orElse(null);
+            usuario = usuarioRepository.findById(id).orElse(null);
             if (usuario != null) {
                 usuarioCacheService.addToCache(id, usuario);
             }
@@ -42,27 +40,25 @@ public class UsuarioService {
 
     public Usuario saveUsuario(Usuario usuario) {
         if (usuario.getId() == null) {
-            usuario.setId(new ObjectId().toString());
+            usuario.setId(java.util.UUID.randomUUID().toString());
         }
         Usuario savedUsuario = usuarioRepository.save(usuario);
-        usuarioCacheService.addToCache(savedUsuario.getId().toString(), savedUsuario); // Convertir el ID a String
+        usuarioCacheService.addToCache(savedUsuario.getId(), savedUsuario); // No es necesario convertir el ID a String
         return savedUsuario;
     }
 
     public void deleteUsuario(String id) {
-        ObjectId objectId = new ObjectId(id);
-        usuarioRepository.deleteById(objectId);
+        usuarioRepository.deleteById(id);
         usuarioCacheService.removeFromCache(id);
     }
 
     public Usuario updateUsuario(String id, Usuario usuario) {
-        ObjectId objectId = new ObjectId(id);
-        Usuario existingUsuario = usuarioRepository.findById(objectId).orElse(null);
+        Usuario existingUsuario = usuarioRepository.findById(id).orElse(null);
         if (existingUsuario != null) {
             updateUsuarioFields(existingUsuario, usuario);
             Usuario updatedUsuario = usuarioRepository.save(existingUsuario);
             usuarioCacheService.removeFromCache(id); // Eliminar el usuario anterior de la caché
-            usuarioCacheService.addToCache(updatedUsuario.getId().toString(), updatedUsuario); // Agregar el usuario actualizado a la caché
+            usuarioCacheService.addToCache(updatedUsuario.getId(), updatedUsuario); // Agregar el usuario actualizado a la caché
             return updatedUsuario;
         } else {
             return null;

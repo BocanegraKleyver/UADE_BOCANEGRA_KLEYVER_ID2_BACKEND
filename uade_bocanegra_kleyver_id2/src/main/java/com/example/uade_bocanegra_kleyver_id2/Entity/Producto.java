@@ -1,8 +1,5 @@
 package com.example.uade_bocanegra_kleyver_id2.Entity;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,22 +11,22 @@ public class Producto {
 
     private String nombre;
     private String descripcion;
-    private BigDecimal precio;
-    private List<String> imagenes;
-    private List<String> comentarios;
-    private List<String> videos;
+    private double  precio;
+    private String imagen;
+    private String comentario;
+    private String video;
 
     // Constructor vacío
     public Producto() {}
 
     // Constructor con parámetros
-    public Producto(String nombre, String descripcion, BigDecimal precio, List<String> imagenes, List<String> comentarios, List<String> videos) {
+    public Producto(String nombre, String descripcion, double precio, String imagen, String comentario, String video) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
-        this.imagenes = imagenes;
-        this.comentarios = comentarios;
-        this.videos = videos;
+        this.imagen = imagen;
+        this.comentario = comentario;
+        this.video = video;
     }
 
     // Getters y setters
@@ -57,35 +54,35 @@ public class Producto {
         this.descripcion = descripcion;
     }
 
-    public BigDecimal getPrecio() {
+    public double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(BigDecimal precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
 
-    public List<String> getImagenes() {
-        return imagenes;
+    public String getImagen() {
+        return imagen;
     }
 
-    public void setImagenes(List<String> imagenes) {
-        this.imagenes = imagenes;
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 
-    public List<String> getComentarios() {
-        return comentarios;
+    public String getComentario() {
+        return comentario;
     }
 
-    public void setComentarios(List<String> comentarios) {
-        this.comentarios = comentarios;
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
     }
 
-    public List<String> getVideos() {
-        return videos;
+    public String getVideo() {
+        return video;
     }
 
-    public void setVideos(List<String> videos) {
-        this.videos = videos;
+    public void setVideo(String video) {
+        this.video = video;
     }
 }

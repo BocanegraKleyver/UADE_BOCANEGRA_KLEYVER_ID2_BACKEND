@@ -2,7 +2,6 @@ package com.example.uade_bocanegra_kleyver_id2.Entity;
 
 import java.util.Date;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,9 +9,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Sesion {
 
     @Id
-    private ObjectId id;
+    private String id;
 
-    private ObjectId usuarioId;
+    private String usuarioId; // Cambiamos ObjectId a String
     private Date fechaInicio;
     private Date fechaFin;
 
@@ -20,26 +19,26 @@ public class Sesion {
     public Sesion() {
     }
 
-    public Sesion(ObjectId usuarioId, Date fechaInicio, Date fechaFin) {
+    public Sesion(String usuarioId, Date fechaInicio, Date fechaFin) {
         this.usuarioId = usuarioId;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
     }
 
     // Getters y setters
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public ObjectId getUsuarioId() {
+    public String getUsuarioId() {
         return usuarioId;
     }
 
-    public void setUsuarioId(ObjectId usuarioId) {
+    public void setUsuarioId(String usuarioId) {
         this.usuarioId = usuarioId;
     }
 

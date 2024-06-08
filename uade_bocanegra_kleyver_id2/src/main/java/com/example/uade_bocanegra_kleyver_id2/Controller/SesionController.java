@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import com.example.uade_bocanegra_kleyver_id2.Service.UsuarioService; // Importa
 
 @RestController
 @RequestMapping("/api/sesion")
+@CrossOrigin(origins = "http://localhost:3000") // Habilitar CORS para permitir solicitudes desde el frontend en el puerto 3000
 public class SesionController {
 
     @Autowired
@@ -41,21 +43,20 @@ public class SesionController {
         return sesionService.getSesionById(id);
     }
 
-@PostMapping("/login")
-public ResponseEntity<?> iniciarSesion(@RequestBody Usuario usuario) {
-    // Llama al servicio de usuario para verificar las credenciales
-    Usuario usuarioAutenticado = usuarioService.autenticarUsuario(usuario.getUsuario(), usuario.getPassword());
-    if (usuarioAutenticado != null) {
-        // Si el usuario es autenticado, inicia sesión y retorna la sesión creada
-        Sesion sesion = sesionService.iniciarSesion(usuarioAutenticado);
-        return ResponseEntity.ok(sesion); // Retornar la sesión creada
-    } else {
-        // Si las credenciales son incorrectas, devuelve un mensaje de error
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Usuario o contraseña incorrectos"));
+    @PostMapping("/login")
+    public ResponseEntity<?> iniciarSesion(@RequestBody Usuario usuario) {
+        // Llama al servicio de usuario para verificar las credenciales
+        Usuario usuarioAutenticado = usuarioService.autenticarUsuario(usuario.getUsuario(), usuario.getPassword());
+        if (usuarioAutenticado != null) {
+            // Si el usuario es autenticado, inicia sesión y retorna la sesión creada
+            Sesion sesion = sesionService.iniciarSesion(usuarioAutenticado);
+            return ResponseEntity.ok(sesion); // Retornar la sesión creada
+        } else {
+            // Si las credenciales son incorrectas, devuelve un mensaje de error
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Usuario o contraseña incorrectos"));
+        }
     }
-}
 
-    
     // Cerrar una sesión existente
     @PostMapping("/cerrar/{id}")
     public Sesion cerrarSesion(@PathVariable String id) {

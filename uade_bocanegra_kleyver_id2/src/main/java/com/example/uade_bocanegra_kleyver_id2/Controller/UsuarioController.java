@@ -18,17 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.uade_bocanegra_kleyver_id2.Entity.Usuario;
 import com.example.uade_bocanegra_kleyver_id2.Redis.ContadorVisitasService;
-import com.example.uade_bocanegra_kleyver_id2.Repository.UsuarioRepository;
 import com.example.uade_bocanegra_kleyver_id2.Service.UsuarioService;
 
 @RestController
 @RequestMapping("/api/usuario")
 @CrossOrigin(origins = "http://localhost:3000") // Habilitar CORS para permitir solicitudes desde el frontend en el puerto 3000
 public class UsuarioController {
-
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private UsuarioService usuarioService;
@@ -72,12 +67,6 @@ public class UsuarioController {
         // Aquí solo pongo un ejemplo simple, debes adaptarlo a tu lógica real
         Usuario usuarioEncontrado = usuarioService.getUsuarioByUsuario(usuario.getUsuario());
         return usuarioEncontrado != null && usuarioEncontrado.getPassword().equals(usuario.getPassword());
-    }
-    
-    public Usuario autenticarUsuario(String usuario, String password) {
-        // Buscar el usuario por usuario y contraseña
-        Usuario usuarioAutenticado = usuarioRepository.findByUsuarioAndPassword(usuario, password);
-        return usuarioAutenticado;
     }
 
     @PutMapping("/{id}")

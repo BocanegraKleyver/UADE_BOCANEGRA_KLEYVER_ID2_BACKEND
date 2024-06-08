@@ -9,6 +9,7 @@ Legajo: 1116590
 5: Conecto con mongodb, registro y login de usuarios correcto contra la base.
 6: Pruebas test de login y cerrar sesion correctas.
 7: Creacion de producto funcionando.
+8: Carga de producto correcto.
 
 sesion, actividadUsuario.
 5: Creo Documents, Repository, Service,Controller de: Usuario, sesion, actividadUsuario.
