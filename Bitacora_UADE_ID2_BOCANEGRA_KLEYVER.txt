@@ -1,0 +1,18 @@
+Bitacora: uade_id2_bocanegra_kleyver
+Alumno:Bocanegra Kleyver Alexander
+Legajo: 1116590
+
+1: Instale MongoDB, Redis, Maven, Jdk21.
+2: mongod y mongosh para inicializar MongoDB.
+3: redis-server --port 6380 para inicializar Redis.
+4: Creo Documents en mongodb de: Usuario, sesion, actividadUsuario.
+5: Creo Documents, Repository, Service,Controller de: Usuario, sesion, actividadUsuario.
+6: Creo Documents en mongodb de: Producto, Carrito, CarritoProducto,CarritoHistorial,CarritoCambio.
+7: Creo Documents, Repository, Service,Controller de: Producto, Carrito, CarritoProducto,CarritoHistorial,CarritoCambio.
+8: Creo Documents en mongodb de: Pedido, Factura, Pago, RegistroFinanciero.
+9: Creo Documents, Repository, Service,Controller de: Pedido, Factura, Pago, RegistroFinanciero.
+10: Las URI funcionan correctamente para todos los endpoint.
+11: Redis para cache, y conteo visitas.
+12: Creacion carpetas backend y frontend.
+13: Merge frontend y backend.
+
