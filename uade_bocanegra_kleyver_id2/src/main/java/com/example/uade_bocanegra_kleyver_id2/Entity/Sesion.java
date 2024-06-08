@@ -4,15 +4,15 @@ import java.util.Date;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document; // Agregar importación para ObjectId
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "sesion")
 public class Sesion {
 
     @Id
-    private String id;
+    private ObjectId id;
 
-    private ObjectId usuarioId; // Cambiar el tipo de dato a ObjectId
+    private ObjectId usuarioId;
     private Date fechaInicio;
     private Date fechaFin;
 
@@ -20,26 +20,26 @@ public class Sesion {
     public Sesion() {
     }
 
-    public Sesion(ObjectId usuarioId, Date fechaInicio, Date fechaFin) { // Cambiar el tipo de dato del parámetro
+    public Sesion(ObjectId usuarioId, Date fechaInicio, Date fechaFin) {
         this.usuarioId = usuarioId;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
     }
 
     // Getters y setters
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
-    public ObjectId getUsuarioId() { // Cambiar el tipo de retorno a ObjectId
+    public ObjectId getUsuarioId() {
         return usuarioId;
     }
 
-    public void setUsuarioId(ObjectId usuarioId) { // Cambiar el tipo de dato del parámetro
+    public void setUsuarioId(ObjectId usuarioId) {
         this.usuarioId = usuarioId;
     }
 

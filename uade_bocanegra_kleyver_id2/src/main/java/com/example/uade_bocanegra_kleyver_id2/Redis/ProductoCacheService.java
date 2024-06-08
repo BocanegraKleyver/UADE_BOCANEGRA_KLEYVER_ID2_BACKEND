@@ -1,25 +1,25 @@
 package com.example.uade_bocanegra_kleyver_id2.Redis;
-
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-@Service
-public class RedisCacheService {
+import com.example.uade_bocanegra_kleyver_id2.Entity.Producto;
 
-    private static final long CACHE_EXPIRATION = 10; // Tiempo de expiración lo pongo en minutos
+@Service
+public class ProductoCacheService {
+
+    private static final long CACHE_EXPIRATION = 10; // Tiempo de expiración en minutos
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, Producto> redisTemplate;
 
-    public void addToCache(String key, Object value) {
+    public void addToCache(String key, Producto value) {
         redisTemplate.opsForValue().set(key, value, CACHE_EXPIRATION, TimeUnit.MINUTES);
     }
 
-    public Object getFromCache(String key) {
+    public Producto getFromCache(String key) {
         return redisTemplate.opsForValue().get(key);
     }
 
@@ -37,6 +37,6 @@ public class RedisCacheService {
 
     public boolean isCacheValid(String key, long expirationTime) {
         Long ttl = redisTemplate.getExpire(key, TimeUnit.MINUTES);
-        return Objects.nonNull(ttl) && ttl > expirationTime;
+        return ttl != null && ttl > expirationTime;
     }
 }

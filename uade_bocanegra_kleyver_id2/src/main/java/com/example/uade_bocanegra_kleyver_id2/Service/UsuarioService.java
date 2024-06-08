@@ -5,12 +5,10 @@ import java.util.Objects;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import com.example.uade_bocanegra_kleyver_id2.Entity.Usuario;
-import com.example.uade_bocanegra_kleyver_id2.Redis.RedisCacheService;
+import com.example.uade_bocanegra_kleyver_id2.Redis.UsuarioCacheService;
 import com.example.uade_bocanegra_kleyver_id2.Repository.UsuarioRepository;
 
 @Service
@@ -20,65 +18,61 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private RedisCacheService redisCacheService;
+    private UsuarioCacheService usuarioCacheService;
 
     public List<Usuario> getAllUsuarios() {
         return usuarioRepository.findAll();
     }
 
-public Usuario getUsuarioById(String id) {
-    Usuario usuario = (Usuario) redisCacheService.getFromCache(id);
-    if (usuario == null) {
-        ObjectId objectId = new ObjectId(id); // Convertir el String a ObjectId
-        Example<Usuario> example = Example.of(new Usuario(objectId.toString()),
-                ExampleMatcher.matchingAny()); // Crear un ejemplo para buscar por ID
-        usuario = usuarioRepository.findOne(example).orElse(null);
-        if (usuario != null) {
-            redisCacheService.addToCache(id, usuario);
+    public Usuario getUsuarioById(String id) {
+        Usuario usuario = usuarioCacheService.getFromCache(id);
+        if (usuario == null) {
+            ObjectId objectId = new ObjectId(id);
+            usuario = usuarioRepository.findById(objectId).orElse(null);
+            if (usuario != null) {
+                usuarioCacheService.addToCache(id, usuario);
+            }
         }
+        return usuario;
     }
-    return usuario;
-}
 
-public Usuario getUsuarioByUsuario(String usuario) {
-    return usuarioRepository.findByUsuario(usuario);
-}
+    public Usuario getUsuarioByUsuario(String usuario) {
+        return usuarioRepository.findByUsuario(usuario);
+    }
 
     public Usuario saveUsuario(Usuario usuario) {
         if (usuario.getId() == null) {
-            usuario.setId(new ObjectId().toString()); // Generar un nuevo ObjectId como String
+            usuario.setId(new ObjectId().toString());
         }
         Usuario savedUsuario = usuarioRepository.save(usuario);
-        redisCacheService.addToCache(savedUsuario.getId(), savedUsuario);
+        usuarioCacheService.addToCache(savedUsuario.getId().toString(), savedUsuario); // Convertir el ID a String
         return savedUsuario;
     }
 
     public void deleteUsuario(String id) {
-        ObjectId objectId = new ObjectId(id); // Convertir el String a ObjectId
-        usuarioRepository.deleteById(objectId.toString()); // Convertir ObjectId a String
-        redisCacheService.removeFromCache(id);
+        ObjectId objectId = new ObjectId(id);
+        usuarioRepository.deleteById(objectId);
+        usuarioCacheService.removeFromCache(id);
     }
 
     public Usuario updateUsuario(String id, Usuario usuario) {
-        // Verificar si el usuario existe
-        ObjectId objectId = new ObjectId(id); // Convertir el String a ObjectId
-        Usuario existingUsuario = usuarioRepository.findById(objectId.toString()).orElse(null); // Convertir ObjectId a String
+        ObjectId objectId = new ObjectId(id);
+        Usuario existingUsuario = usuarioRepository.findById(objectId).orElse(null);
         if (existingUsuario != null) {
-            // Actualizar los campos necesarios
             updateUsuarioFields(existingUsuario, usuario);
-    
-            // Guardar los cambios en la base de datos
             Usuario updatedUsuario = usuarioRepository.save(existingUsuario);
-            redisCacheService.addToCache(id, updatedUsuario); // Actualizar en caché si es necesario
+            usuarioCacheService.removeFromCache(id); // Eliminar el usuario anterior de la caché
+            usuarioCacheService.addToCache(updatedUsuario.getId().toString(), updatedUsuario); // Agregar el usuario actualizado a la caché
             return updatedUsuario;
         } else {
-            return null; // Devolver null si no se encuentra el usuario
+            return null;
         }
     }
-    
-    
 
-    // Método para actualizar los campos de un usuario existente
+    public Usuario autenticarUsuario(String nombreUsuario, String password) {
+        return usuarioRepository.findByUsuarioAndPassword(nombreUsuario, password);
+    }
+
     private void updateUsuarioFields(Usuario existingUsuario, Usuario updatedUsuario) {
         if (Objects.nonNull(updatedUsuario.getNombre())) {
             existingUsuario.setNombre(updatedUsuario.getNombre());

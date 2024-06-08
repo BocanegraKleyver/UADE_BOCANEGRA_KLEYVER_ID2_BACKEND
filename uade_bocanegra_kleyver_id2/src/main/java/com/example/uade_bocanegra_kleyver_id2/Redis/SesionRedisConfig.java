@@ -1,4 +1,5 @@
 package com.example.uade_bocanegra_kleyver_id2.Redis;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,15 +8,17 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import com.example.uade_bocanegra_kleyver_id2.Entity.Sesion;
+
 @Configuration
-public class RedisConfig {
+public class SesionRedisConfig {
 
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
+    public RedisTemplate<String, Sesion> sesionRedisTemplate() {
+        RedisTemplate<String, Sesion> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
