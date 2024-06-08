@@ -1,0 +1,42 @@
+// Dropear la colección si existe
+db.usuarioActividad.drop();
+
+// Crear la colección
+db.createCollection("usuarioActividad");
+
+// Crear índices
+db.usuarioActividad.createIndex({ "sesion_id": 1 }); // Índice en el campo sesion_id
+
+// Insertar datos en la colección usuarioActividad
+db.usuarioActividad.insertMany([
+    { 
+        sesion_id: ObjectId('6663d3f2fb94a2b77816c9d4'), // Sesión de Kleyver Bocanegra
+        actividad: 'Inició sesión',
+        fecha: ISODate('2024-06-07T10:30:00Z')
+    },
+    { 
+        sesion_id: ObjectId('6663d3f2fb94a2b77816c9d5'), // Sesión de Ana Martinez
+        actividad: 'Actualizó perfil',
+        fecha: ISODate('2024-06-07T11:15:00Z')
+    },
+    { 
+        sesion_id: ObjectId('6663d3f2fb94a2b77816c9d6'), // Sesión de Alexander Magno
+        actividad: 'Realizó una compra',
+        fecha: ISODate('2024-06-07T12:30:00Z')
+    },
+    { 
+        sesion_id: ObjectId('6663d3f2fb94a2b77816c9d7'), // Sesión de María Fernández
+        actividad: 'Consultó su saldo',
+        fecha: ISODate('2024-06-07T13:45:00Z')
+    },
+    { 
+        sesion_id: ObjectId('6663d3f2fb94a2b77816c9d8'), // Sesión de Javier IeliM
+        actividad: 'Cerró sesión',
+        fecha: ISODate('2024-06-07T14:55:00Z')
+    },
+    { 
+        sesion_id: ObjectId('6663d3f2fb94a2b77816c9d9'), // Sesión de Nuevo Usuario
+        actividad: 'Registró una actividad',
+        fecha: ISODate('2024-06-07T15:30:00Z')
+    }
+]);

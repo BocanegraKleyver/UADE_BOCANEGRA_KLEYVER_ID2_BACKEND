@@ -1,0 +1,402 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////// producto, carrito , carritoProducto, carritoCambio, carritoHistorial //////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Eliminar colección si existe
+db.producto.drop();
+db.carrito.drop();
+db.carritoProducto.drop();
+db.carritoCambio.drop()
+db.carritoHistorial.drop();
+
+
+// Crear colección para producto,carrito,carritoProducto,carritoCambio,carritoHistorial
+db.createCollection("producto");
+db.createCollection("carrito");
+db.createCollection("carritoProducto");
+db.createCollection("carritoCambio")
+db.createCollection("carritoHistorial");
+
+// Crear índice si es necesario
+db.carrito.createIndex({ usuario_id: 1 });
+db.carritoProducto.createIndex({ carrito_id: 1 });
+db.carritoProducto.createIndex({ producto_id: 1 });
+db.carritoCambio.createIndex({ carritoId: 1 })
+db.carritoHistorial.createIndex({ carritoId: 1 });
+
+// Insertar documentos en la colección producto,carrito,carritoProducto, carritoCambio
+
+db.producto.insertMany([
+  {
+    nombre: "Silla Gamer X200",
+    descripcion: "Silla gamer ergonómica con soporte lumbar y reposabrazos ajustables.",
+    precio: 300
+  },
+  {
+    nombre: "Silla de Comedor Moderna",
+    descripcion: "Silla de comedor con diseño moderno y elegante, fabricada en madera.",
+    precio: 150
+  },
+  {
+    nombre: "Silla de Oficina Ejecutiva",
+    descripcion: "Silla de oficina ejecutiva con asiento acolchado y respaldo alto.",
+    precio: 250
+  },
+  {
+    nombre: "Silla Plegable para Exterior",
+    descripcion: "Silla plegable ideal para exteriores, fácil de transportar y almacenar.",
+    precio: 80
+  },
+  {
+    nombre: "Silla Mecedora Clásica",
+    descripcion: "Silla mecedora clásica hecha de madera, perfecta para relajarse.",
+    precio: 180
+  },
+  {
+    nombre: "Silla de Madera",
+    descripcion: "Silla de madera resistente con amplio espacio de trabajo.",
+    precio: 400
+  },
+  {
+    nombre: "Sillón Reclinable",
+    descripcion: "Sillón reclinable con soporte lumbar y reposapiés retráctil.",
+    precio: 350
+  }
+]);
+
+// Insertar datos en la colección carrito
+db.carrito.insertMany([
+    { usuario_id: ObjectId('666245fab29ef0684e16c9b5'), estado: 'activo', fecha_creacion: new Date(), fecha_modificacion: new Date() },
+    { usuario_id: ObjectId('666245fab29ef0684e16c9b6'), estado: 'activo', fecha_creacion: new Date(), fecha_modificacion: new Date() },
+    { usuario_id: ObjectId('666245fab29ef0684e16c9b7'), estado: 'activo', fecha_creacion: new Date(), fecha_modificacion: new Date() },
+    { usuario_id: ObjectId('666245fab29ef0684e16c9b8'), estado: 'activo', fecha_creacion: new Date(), fecha_modificacion: new Date() },
+    { usuario_id: ObjectId('666245fab29ef0684e16c9b9'), estado: 'activo', fecha_creacion: new Date(), fecha_modificacion: new Date() }
+]);
+
+
+db.carritoProducto.insertMany([
+    { carrito_id: ObjectId('6662463cb29ef0684e16c9ba'), producto_id: ObjectId('6662463cb29ef0684e16c9ba'), cantidad: 2 },
+    { carrito_id: ObjectId('6662463cb29ef0684e16c9ba'), producto_id: ObjectId('6662463cb29ef0684e16c9bb'), cantidad: 1 },
+    { carrito_id: ObjectId('6662463cb29ef0684e16c9bb'), producto_id: ObjectId('6662463cb29ef0684e16c9bc'), cantidad: 3 },
+    { carrito_id: ObjectId('6662463cb29ef0684e16c9bc'), producto_id: ObjectId('6662463cb29ef0684e16c9bd'), cantidad: 1 },
+    { carrito_id: ObjectId('6662463cb29ef0684e16c9bd'), producto_id: ObjectId('6662463cb29ef0684e16c9be'), cantidad: 4 }
+]);
+
+db.carritoCambio.insertMany([
+    {
+        carritoId: "1",
+        usuarioId: "1",
+        productoId: "1",
+        cantidadAnterior: 0,
+        cantidadNueva: 2,
+        tipoAccion: "agregar",
+        fechaHora: new Date()
+    },
+    {
+        carritoId: "1",
+        usuarioId: "1",
+        productoId: "2",
+        cantidadAnterior: 0,
+        cantidadNueva: 1,
+        tipoAccion: "agregar",
+        fechaHora: new Date()
+    },
+    {
+        carritoId: "2",
+        usuarioId: "2",
+        productoId: "3",
+        cantidadAnterior: 0,
+        cantidadNueva: 3,
+        tipoAccion: "agregar",
+        fechaHora: new Date()
+    },
+    {
+        carritoId: "3",
+        usuarioId: "3",
+        productoId: "4",
+        cantidadAnterior: 0,
+        cantidadNueva: 1,
+        tipoAccion: "agregar",
+        fechaHora: new Date()
+    },
+    {
+        carritoId: "4",
+        usuarioId: "4",
+        productoId: "5",
+        cantidadAnterior: 0,
+        cantidadNueva: 4,
+        tipoAccion: "agregar",
+        fechaHora: new Date()
+    }
+]);
+       
+
+// Inserción en la tabla carritoHistorial
+db.carritoHistorial.insertMany([
+    {
+        carritoId: ObjectId("666245fab29ef0684e16c9b5"),
+        estado: 'activo',
+        timestamp: ISODate('2024-06-06T23:29:00.897Z')
+    },
+    {
+        carritoId: ObjectId("666245fab29ef0684e16c9b6"),
+        estado: 'activo',
+        timestamp: ISODate('2024-06-06T23:29:00.897Z')
+    },
+    {
+        carritoId: ObjectId("666245fab29ef0684e16c9b7"),
+        estado: 'activo',
+        timestamp: ISODate('2024-06-06T23:29:00.897Z')
+    },
+    {
+        carritoId: ObjectId("666245fab29ef0684e16c9b8"),
+        estado: 'activo',
+        timestamp: ISODate('2024-06-06T23:29:00.897Z')
+    },
+    {
+        carritoId: ObjectId("666245fab29ef0684e16c9b9"),
+        estado: 'activo',
+        timestamp: ISODate('2024-06-06T23:29:00.897Z')
+    }
+]);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////// pedido , factura , pago, registroFinanciero //////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Drop de la colección si existe
+db.pedido.drop();
+db.factura.drop();
+db.pago.drop();
+db.registroFinanciero.drop();
+
+// Creación de la colección y definición de índices si es necesario
+db.createCollection("pedido");
+db.createCollection("factura");
+db.createCollection("pago");
+db.createCollection("registroFinanciero");
+
+
+db.pedido.createIndex({ "usuarioId": 1 });
+db.factura.createIndex({ "pedidoId": 1 });
+db.pago.createIndex({ "facturaId": 1 });
+db.registroFinanciero.createIndex({ "idFactura": 1 });
+
+// Inserción de datos
+db.pedido.insertMany([
+  {
+    usuarioId: "1",
+    fecha: ISODate("2023-06-01T10:00:00Z"),
+    estado: "pendiente",
+    nombreCliente: "Kleyver",
+    apellidoCliente: "Bocanegra",
+    direccionCliente: "Santa Fe 1230",
+    condicionIvaCliente: "Responsable Inscripto",
+    importeTotal: NumberDecimal("100.00")
+  },
+  {
+    usuarioId: "2",
+    fecha: ISODate("2023-06-02T11:00:00Z"),
+    estado: "completado",
+    nombreCliente: "Ana",
+    apellidoCliente: "Martinez",
+    direccionCliente: "Avenida Cordoba 5822",
+    condicionIvaCliente: "Responsable Inscripto",
+    importeTotal: NumberDecimal("150.00")
+  },
+  {
+    usuarioId: "3",
+    fecha: ISODate("2023-06-03T12:00:00Z"),
+    estado: "pendiente",
+    nombreCliente: "Alexander",
+    apellidoCliente: "Magno",
+    direccionCliente: "Bolivar 555",
+    condicionIvaCliente: "Monotributista",
+    importeTotal: NumberDecimal("200.00")
+  },
+  {
+    usuarioId: "4",
+    fecha: ISODate("2023-06-04T13:00:00Z"),
+    estado: "cancelado",
+    nombreCliente: "María",
+    apellidoCliente: "Fernández",
+    direccionCliente: "Medrano 430",
+    condicionIvaCliente: "Responsable Inscripto",
+    importeTotal: NumberDecimal("250.00")
+  },
+  {
+    usuarioId: "5",
+    fecha: ISODate("2023-06-05T14:00:00Z"),
+    estado: "completado",
+    nombreCliente: "Javier",
+    apellidoCliente: "IeliM",
+    direccionCliente: "Avenida Corrientes 3545",
+    condicionIvaCliente: "Monotributista",
+    importeTotal: NumberDecimal("300.00")
+  }
+]);
+
+db.factura.insertMany([
+  {
+    pedidoId: "1",
+    fecha: ISODate("2023-06-01T15:00:00Z"),
+    importe: NumberDecimal("100.00"),
+    descuento: NumberDecimal("5.00"),
+    impuestos: NumberDecimal("21.00")
+  },
+  {
+    pedidoId: "2",
+    fecha: ISODate("2023-06-02T16:00:00Z"),
+    importe: NumberDecimal("200.00"),
+    descuento: NumberDecimal("10.00"),
+    impuestos: NumberDecimal("42.00")
+  },
+  {
+    pedidoId: "3",
+    fecha: ISODate("2023-06-03T17:00:00Z"),
+    importe: NumberDecimal("150.00"),
+    descuento: NumberDecimal("7.50"),
+    impuestos: NumberDecimal("31.50")
+  },
+  {
+    pedidoId: "4",
+    fecha: ISODate("2023-06-04T18:00:00Z"),
+    importe: NumberDecimal("50.00"),
+    descuento: NumberDecimal("2.50"),
+    impuestos: NumberDecimal("10.50")
+  },
+  {
+    pedidoId: "5",
+    fecha: ISODate("2023-06-05T19:00:00Z"),
+    importe: NumberDecimal("300.00"),
+    descuento: NumberDecimal("15.00"),
+    impuestos: NumberDecimal("63.00")
+  },
+  {
+    pedidoId: "1",
+    fecha: ISODate("2023-06-06T10:00:00Z"),
+    importe: NumberDecimal("120.00"),
+    descuento: NumberDecimal("6.00"),
+    impuestos: NumberDecimal("25.20")
+  },
+  {
+    pedidoId: "2",
+    fecha: ISODate("2023-06-07T11:00:00Z"),
+    importe: NumberDecimal("220.00"),
+    descuento: NumberDecimal("11.00"),
+    impuestos: NumberDecimal("46.20")
+  },
+  {
+    pedidoId: "3",
+    fecha: ISODate("2023-06-08T12:00:00Z"),
+    importe: NumberDecimal("160.00"),
+    descuento: NumberDecimal("8.00"),
+    impuestos: NumberDecimal("33.60")
+  },
+  {
+    pedidoId: "4",
+    fecha: ISODate("2023-06-09T13:00:00Z"),
+    importe: NumberDecimal("60.00"),
+    descuento: NumberDecimal("3.00"),
+    impuestos: NumberDecimal("12.60")
+  },
+  {
+    pedidoId: "5",
+    fecha: ISODate("2023-06-10T14:00:00Z"),
+    importe: NumberDecimal("320.00"),
+    descuento: NumberDecimal("16.00"),
+    impuestos: NumberDecimal("67.20")
+  }
+]);
+
+db.pago.insertMany([
+  {
+    facturaId: "1",
+    fecha: ISODate("2023-06-01T20:00:00Z"),
+    monto: NumberDecimal("116.00"),
+    formaPago: "efectivo"
+  },
+  {
+    facturaId: "2",
+    fecha: ISODate("2023-06-02T21:00:00Z"),
+    monto: NumberDecimal("232.00"),
+    formaPago: "tarjeta"
+  },
+  {
+    facturaId: "3",
+    fecha: ISODate("2023-06-03T22:00:00Z"),
+    monto: NumberDecimal("173.00"),
+    formaPago: "cta. cte."
+  },
+  {
+    facturaId: "4",
+    fecha: ISODate("2023-06-04T23:00:00Z"),
+    monto: NumberDecimal("57.00"),
+    formaPago: "efectivo"
+  },
+  {
+    facturaId: "5",
+    fecha: ISODate("2023-06-05T00:00:00Z"),
+    monto: NumberDecimal("348.00"),
+    formaPago: "tarjeta"
+  },
+  {
+    facturaId: "1",
+    fecha: ISODate("2023-06-06T20:00:00Z"),
+    monto: NumberDecimal("139.20"),
+    formaPago: "efectivo"
+  },
+  {
+    facturaId: "2",
+    fecha: ISODate("2023-06-07T21:00:00Z"),
+    monto: NumberDecimal("277.20"),
+    formaPago: "tarjeta"
+  },
+  {
+    facturaId: "3",
+    fecha: ISODate("2023-06-08T22:00:00Z"),
+    monto: NumberDecimal("203.60"),
+    formaPago: "cta. cte."
+  },
+  {
+    facturaId: "4",
+    fecha: ISODate("2023-06-09T23:00:00Z"),
+    monto: NumberDecimal("67.20"),
+    formaPago: "efectivo"
+  },
+  {
+    facturaId: "5",
+    fecha: ISODate("2023-06-10T00:00:00Z"),
+    monto: NumberDecimal("430.40"),
+    formaPago: "tarjeta"
+  }
+]);
+
+db.registroFinanciero.insertMany([
+  {
+    tipoTransaccion: "Venta",
+    idFactura: 1,
+    fecha: ISODate("2024-06-06T10:30:00Z"),
+    monto: NumberDecimal("150.00"),
+    metodoPago: "Efectivo",
+    descripcion: "Venta de productos"
+  },
+  {
+    tipoTransaccion: "Compra",
+    idFactura: null,
+    fecha: ISODate("2024-06-06T11:45:00Z"),
+    monto: NumberDecimal("75.00"),
+    metodoPago: "Tarjeta de crédito",
+    descripcion: "Compra de suministros"
+  },
+  {
+    tipoTransaccion: "Pago",
+    idFactura: 2,
+    fecha: ISODate("2024-06-06T15:20:00Z"),
+    monto: NumberDecimal("200.00"),
+    metodoPago: "Transferencia bancaria",
+    descripcion: "Pago de factura pendiente"
+  }
+]);
+

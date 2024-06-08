@@ -1,0 +1,64 @@
+// Dropear la colección si existe
+db.usuario.drop();
+
+// Crear la colección y los índices
+db.createCollection("usuario");
+db.usuario.createIndex({ "documentoIdentidad": 1 }, { unique: true }); // Índice único en el campo documentoIdentidad
+
+// Insertar los datos
+db.usuario.insertMany([
+    { 
+        nombre: 'Kleyver Bocanegra',
+        direccion: 'Santa Fe 1230',
+        documentoIdentidad: '12345678',
+        categoria: 'LOW',
+        usuario: 'kley',
+        password: '123456',
+        email: 'kley@example.com'
+    },
+    { 
+        nombre: 'Ana Martinez',
+        direccion: 'Avenida Cordoba 5822',
+        documentoIdentidad: '23456789',
+        categoria: 'MEDIUM',
+        usuario: 'ana',
+        password: 'abcdef',
+        email: 'ana@example.com'
+    },
+    { 
+        nombre: 'Alexander Magno',
+        direccion: 'Bolivar 555',
+        documentoIdentidad: '34567890',
+        categoria: 'TOP',
+        usuario: 'alex',
+        password: 'qwerty',
+        email: 'alex@example.com'
+    },
+    { 
+        nombre: 'María Fernández',
+        direccion: 'Medrano 430',
+        documentoIdentidad: '45678901',
+        categoria: 'LOW',
+        usuario: 'maria',
+        password: '987654',
+        email: 'maria@example.com'
+    },
+    { 
+        nombre: 'Javier IeliM',
+        direccion: 'Avenida Corrientes 3545',
+        documentoIdentidad: '56789012',
+        categoria: 'MEDIUM',
+        usuario: 'javier',
+        password: 'javier123',
+        email: 'javier@example.com'
+    },
+    { 
+        nombre: 'Nuevo Usuario',
+        direccion: 'Calle Nueva 123',
+        documentoIdentidad: '98765432',
+        categoria: 'HIGH',
+        usuario: 'nuevo',
+        password: 'nuevopass',
+        email: 'nuevo@example.com'
+    }
+]);

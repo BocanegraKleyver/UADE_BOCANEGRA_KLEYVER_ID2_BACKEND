@@ -1,0 +1,43 @@
+// Dropear la colección si existe
+db.sesion.drop();
+
+// Crear la colección y los índices
+db.createCollection("sesion");
+
+// Crear índices
+db.sesion.createIndex({ "usuarioId": 1 }); // Índice en el campo usuarioId
+
+
+// Insertar datos en la colección sesion
+db.sesion.insertMany([
+    { 
+        usuarioId: ObjectId('6663d1a2fb94a2b77816c9ce'), // Kleyver Bocanegra
+        fechaInicio: ISODate("2024-06-07T10:00:00Z"),
+        fechaFin: ISODate("2024-06-07T12:00:00Z")
+    },
+    { 
+        usuarioId: ObjectId('6663d1a2fb94a2b77816c9cf'), // Ana Martinez
+        fechaInicio: ISODate("2024-06-07T11:00:00Z"),
+        fechaFin: ISODate("2024-06-07T13:00:00Z")
+    },
+    { 
+        usuarioId: ObjectId('6663d1a2fb94a2b77816c9d0'), // Alexander Magno
+        fechaInicio: ISODate("2024-06-07T12:00:00Z"),
+        fechaFin: ISODate("2024-06-07T14:00:00Z")
+    },
+    { 
+        usuarioId: ObjectId('6663d1a2fb94a2b77816c9d1'), // María Fernández
+        fechaInicio: ISODate("2024-06-07T13:00:00Z"),
+        fechaFin: ISODate("2024-06-07T15:00:00Z")
+    },
+    { 
+        usuarioId: ObjectId('6663d1a2fb94a2b77816c9d2'), // Javier IeliM
+        fechaInicio: ISODate("2024-06-07T14:00:00Z"),
+        fechaFin: ISODate("2024-06-07T16:00:00Z")
+    },
+    { 
+        usuarioId: ObjectId('6663d1a2fb94a2b77816c9d3'), // Nuevo Usuario
+        fechaInicio: ISODate("2024-06-07T15:00:00Z"),
+        fechaFin: ISODate("2024-06-07T17:00:00Z")
+    }
+]);
