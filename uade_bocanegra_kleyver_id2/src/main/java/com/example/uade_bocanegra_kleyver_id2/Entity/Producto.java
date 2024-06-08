@@ -12,6 +12,7 @@ public class Producto {
     private String nombre;
     private String descripcion;
     private double  precio;
+    private int cantidad;
     private String imagen;
     private String comentario;
     private String video;
@@ -20,10 +21,11 @@ public class Producto {
     public Producto() {}
 
     // Constructor con parámetros
-    public Producto(String nombre, String descripcion, double precio, String imagen, String comentario, String video) {
+    public Producto(String nombre, String descripcion, double precio, int cantidad, String imagen, String comentario, String video) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
+        this.cantidad = cantidad;
         this.imagen = imagen;
         this.comentario = comentario;
         this.video = video;
@@ -60,6 +62,14 @@ public class Producto {
 
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public int getCantidad() {
+        return cantidad;
     }
 
     public String getImagen() {

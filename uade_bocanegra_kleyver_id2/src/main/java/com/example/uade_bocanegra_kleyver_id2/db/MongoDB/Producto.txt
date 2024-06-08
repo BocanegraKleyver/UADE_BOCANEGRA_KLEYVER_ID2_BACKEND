@@ -8,23 +8,15 @@ POST
 http://localhost:8080/api/producto
 
 {
-    "nombre": "Silla Gamer X300",
-    "descripcion": "Silla gamer ergonómica con soporte lumbar y reposabrazos ajustables. ¡Ahora en versión mejorada!",
-    "precio": 350,
-    "imagenes": [
-        "https://ejemplo.com/imagen1.jpg",
-        "https://ejemplo.com/imagen2.jpg",
-        "https://ejemplo.com/imagen3.jpg"
-    ],
-    "comentarios": [
-        "Excelente silla",
-        "Muy cómoda"
-    ],
-    "videos": [
-        "https://ejemplo.com/video1.mp4",
-        "https://ejemplo.com/video2.mp4"
-    ]
+    "nombre": "Silla de Comedor Moderna",
+    "descripcion": "Silla de comedor moderna con estructura de metal y asiento de cuero sintético.",
+    "precio": 180,
+    "cantidad":3,
+    "imagen": "https://i.blogs.es/a9b4fe/dx/1366_2000.jpg",
+    "comentarios": [],
+    "video": ""
 }
+
 
 {
     "nombre": "Silla Gamer X200",
