@@ -40,6 +40,10 @@ public Usuario getUsuarioById(String id) {
     return usuario;
 }
 
+public Usuario getUsuarioByUsuario(String usuario) {
+    return usuarioRepository.findByUsuario(usuario);
+}
+
     public Usuario saveUsuario(Usuario usuario) {
         if (usuario.getId() == null) {
             usuario.setId(new ObjectId().toString()); // Generar un nuevo ObjectId como String

@@ -5,7 +5,10 @@ Legajo: 1116590
 1: Instale MongoDB, Redis, Maven, Jdk21.
 2: mongod y mongosh para inicializar MongoDB.
 3: redis-server --port 6380 para inicializar Redis.
-4: Creo Documents en mongodb de: Usuario, sesion, actividadUsuario.
+4: Creo Documents en mongodb de: Usuario,
+5: Conecto con mongodb, registro y login de usuarios correcto contra la base.
+
+sesion, actividadUsuario.
 5: Creo Documents, Repository, Service,Controller de: Usuario, sesion, actividadUsuario.
 6: Creo Documents en mongodb de: Producto, Carrito, CarritoProducto,CarritoHistorial,CarritoCambio.
 7: Creo Documents, Repository, Service,Controller de: Producto, Carrito, CarritoProducto,CarritoHistorial,CarritoCambio.
