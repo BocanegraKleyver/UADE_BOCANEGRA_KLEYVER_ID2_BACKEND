@@ -10,6 +10,10 @@ Legajo: 1116590
 6: Pruebas test de login y cerrar sesion correctas.
 7: Creacion de producto funcionando.
 8: Carga de producto correcto.
+9: test
+10: Test Entidades
+11: Cree carrito, y carrito producto, ambos impactan en la BD, falta la logica de cantidad en el carrito. Por postman me da id carrito null.
+
 
 sesion, actividadUsuario.
 5: Creo Documents, Repository, Service,Controller de: Usuario, sesion, actividadUsuario.
