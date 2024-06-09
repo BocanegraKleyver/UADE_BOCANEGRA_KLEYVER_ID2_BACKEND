@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.uade_bocanegra_kleyver_id2.Entity.Carrito;
 import com.example.uade_bocanegra_kleyver_id2.Entity.Usuario;
-import com.example.uade_bocanegra_kleyver_id2.Redis.UsuarioCacheService;
+import com.example.uade_bocanegra_kleyver_id2.Redis.CacheService;
 import com.example.uade_bocanegra_kleyver_id2.Repository.UsuarioRepository;
 
 @Service
@@ -22,7 +22,7 @@ public class UsuarioService {
     private CarritoService carritoService;
 
     @Autowired
-    private UsuarioCacheService usuarioCacheService;
+    private CacheService<Usuario> usuarioCacheService;
 
     public List<Usuario> getAllUsuarios() {
         return usuarioRepository.findAll();

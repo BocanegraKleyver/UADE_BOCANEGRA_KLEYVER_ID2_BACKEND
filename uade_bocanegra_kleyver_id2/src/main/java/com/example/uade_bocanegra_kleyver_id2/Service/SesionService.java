@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.uade_bocanegra_kleyver_id2.Entity.Sesion;
 import com.example.uade_bocanegra_kleyver_id2.Entity.Usuario;
-import com.example.uade_bocanegra_kleyver_id2.Redis.SesionCacheService;
+import com.example.uade_bocanegra_kleyver_id2.Redis.CacheService;
 import com.example.uade_bocanegra_kleyver_id2.Repository.SesionRepository;
 
 @Service
@@ -17,9 +17,11 @@ public class SesionService {
     @Autowired
     private SesionRepository sesionRepository;
 
-    @Autowired
-    private SesionCacheService sesionCacheService;
 
+    @Autowired
+    private CacheService<Sesion> sesionCacheService; // Corregido para que sea CacheService<Sesion>
+
+    
     public List<Sesion> getAllSesiones() {
         return sesionRepository.findAll();
     }

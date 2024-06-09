@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.uade_bocanegra_kleyver_id2.Entity.Producto;
-import com.example.uade_bocanegra_kleyver_id2.Redis.ProductoCacheService;
+import com.example.uade_bocanegra_kleyver_id2.Redis.CacheService;
 import com.example.uade_bocanegra_kleyver_id2.Repository.ProductoRepository;
 
 @Service
@@ -17,7 +17,7 @@ public class ProductoService {
     private ProductoRepository productoRepository;
 
     @Autowired
-    private ProductoCacheService productoCacheService;
+    private CacheService<Producto> productoCacheService;
 
     public List<Producto> getAllProductos() {
         return productoRepository.findAll();

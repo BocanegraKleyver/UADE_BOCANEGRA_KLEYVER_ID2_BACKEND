@@ -23,6 +23,7 @@ import com.example.uade_bocanegra_kleyver_id2.Entity.Usuario;
 import com.example.uade_bocanegra_kleyver_id2.Redis.ContadorVisitasService;
 import com.example.uade_bocanegra_kleyver_id2.Service.CarritoService;
 import com.example.uade_bocanegra_kleyver_id2.Service.SesionService;
+import com.example.uade_bocanegra_kleyver_id2.Service.UsuarioActividadService;
 import com.example.uade_bocanegra_kleyver_id2.Service.UsuarioService;
 
 @RestController
@@ -39,6 +40,8 @@ public class UsuarioController {
     @Autowired
     private CarritoService carritoService;
 
+@Autowired
+private UsuarioActividadService usuarioActividadService;
 
     @Autowired
     private ContadorVisitasService contadorVisitasService;
@@ -105,11 +108,15 @@ public ResponseEntity<?> loginUsuario(@RequestBody Usuario usuario) {
         // Crear la sesión para el usuario
         Sesion sesion = sesionService.iniciarSesion(usuarioAutenticado);
         
+        // Registrar la actividad de inicio de sesión
+        usuarioActividadService.registrarActividad(sesion.getId(), "Inició sesión");
+        
         return ResponseEntity.ok(Map.of("message", "Inicio de sesión exitoso"));
     } else {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Usuario o contraseña incorrectos"));
     }
 }
+
 
 
     

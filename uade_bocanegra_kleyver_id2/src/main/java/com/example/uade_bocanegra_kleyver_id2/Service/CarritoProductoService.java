@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.uade_bocanegra_kleyver_id2.Entity.CarritoProducto;
-import com.example.uade_bocanegra_kleyver_id2.Redis.CarritoCacheService;
 import com.example.uade_bocanegra_kleyver_id2.Repository.CarritoProductoRepository;
 
 @Service
@@ -15,9 +14,6 @@ public class CarritoProductoService {
 
     @Autowired
     private CarritoProductoRepository carritoProductoRepository;
-
-    @Autowired
-    private CarritoCacheService carritoCacheService;
 
     @Autowired
     private ProductoService productoService; // Importa el servicio de productos para obtener información sobre el stock

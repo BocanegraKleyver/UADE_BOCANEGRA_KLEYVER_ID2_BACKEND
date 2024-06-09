@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.uade_bocanegra_kleyver_id2.Entity.Carrito;
-import com.example.uade_bocanegra_kleyver_id2.Redis.CarritoCacheService;
+import com.example.uade_bocanegra_kleyver_id2.Redis.CacheService;
 import com.example.uade_bocanegra_kleyver_id2.Repository.CarritoRepository;
 
 @Service
@@ -18,8 +18,9 @@ public class CarritoService {
     private CarritoRepository carritoRepository;
 
     @Autowired
-    private CarritoCacheService carritoCacheService;
+    private CacheService<Carrito> carritoCacheService;
 
+    
     public Optional<Carrito> obtenerCarritoPorUsuarioId(String usuarioId) {
         String cacheKey = "carrito:" + usuarioId;
 
