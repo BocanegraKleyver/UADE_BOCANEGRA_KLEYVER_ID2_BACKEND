@@ -2,10 +2,12 @@ package com.example.uade_bocanegra_kleyver_id2.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.uade_bocanegra_kleyver_id2.Entity.Carrito;
 import com.example.uade_bocanegra_kleyver_id2.Entity.Usuario;
 import com.example.uade_bocanegra_kleyver_id2.Redis.UsuarioCacheService;
 import com.example.uade_bocanegra_kleyver_id2.Repository.UsuarioRepository;
@@ -15,6 +17,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private CarritoService carritoService;
 
     @Autowired
     private UsuarioCacheService usuarioCacheService;
@@ -64,6 +69,13 @@ public class UsuarioService {
             return null;
         }
     }
+
+    public boolean isCarritoActivo(String usuarioId) {
+        Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioId);
+        return carritoOptional.isPresent() && carritoOptional.get().getEstado().equals("ACTIVO");
+    }
+
+
 
     public Usuario autenticarUsuario(String nombreUsuario, String password) {
         return usuarioRepository.findByUsuarioAndPassword(nombreUsuario, password);

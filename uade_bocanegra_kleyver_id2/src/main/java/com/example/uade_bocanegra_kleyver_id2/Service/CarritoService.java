@@ -78,6 +78,16 @@ public class CarritoService {
         }
     }
 
+
+    public void marcarCarritoComoCerrado(String usuarioId) {
+        Optional<Carrito> carritoOptional = carritoRepository.findByUsuarioId(usuarioId);
+        if (carritoOptional.isPresent()) {
+            Carrito carrito = carritoOptional.get();
+            carrito.setEstado("cerrado"); // Aquí pasamos directamente el string "cerrado"
+            carritoRepository.save(carrito);
+        }
+    }
+
     public void eliminarCarrito(String usuarioId) {
         String cacheKey = "carrito:" + usuarioId;
 

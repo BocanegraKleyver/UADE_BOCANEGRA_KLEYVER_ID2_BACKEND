@@ -70,4 +70,22 @@ public class SesionService {
         sesionRepository.deleteById(id);
         sesionCacheService.removeFromCache(id);
     }
+
+    public void registrarInicioSesion(Sesion sesion2) {
+        // Crear una nueva sesión
+        Sesion sesion = new Sesion();
+        
+        // Obtener el ID del usuario como String
+        String usuarioId = sesion2.getId();
+        
+        // Setear el ID del usuario en la sesión
+        sesion.setUsuarioId(usuarioId);
+        
+        // Setear la fecha de inicio
+        sesion.setFechaInicio(new Date());
+        
+        // Guardar la sesión
+        sesionRepository.save(sesion);
+    }
+
 }

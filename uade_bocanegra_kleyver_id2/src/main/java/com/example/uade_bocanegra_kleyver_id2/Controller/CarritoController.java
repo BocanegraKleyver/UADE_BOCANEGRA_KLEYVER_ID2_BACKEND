@@ -39,11 +39,17 @@ public class CarritoController {
         Optional<Carrito> carrito = carritoService.obtenerCarritoPorUsuarioId(usuarioId);
         return carrito.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
     @PostMapping("/{usuarioId}")
     public ResponseEntity<Carrito> crearCarrito(@PathVariable String usuarioId) {
-        Carrito carrito = carritoService.crearCarrito(usuarioId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(carrito);
+        Optional<Carrito> carritoExistente = carritoService.obtenerCarritoPorUsuarioId(usuarioId);
+        if (carritoExistente.isPresent()) {
+            // Si el usuario ya tiene un carrito, devolver ese carrito
+            return ResponseEntity.ok(carritoExistente.get());
+        } else {
+            // Si el usuario no tiene carrito, crear uno nuevo
+            Carrito carritoNuevo = carritoService.crearCarrito(usuarioId);
+            return ResponseEntity.status(HttpStatus.CREATED).body(carritoNuevo);
+        }
     }
 
     @PutMapping("/{usuarioId}/producto")
