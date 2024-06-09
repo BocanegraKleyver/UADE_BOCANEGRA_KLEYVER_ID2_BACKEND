@@ -16,40 +16,33 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.uade_bocanegra_kleyver_id2.Entity.CarritoProducto;
 import com.example.uade_bocanegra_kleyver_id2.Service.CarritoProductoService;
-import com.example.uade_bocanegra_kleyver_id2.Service.ProductoService;
 
 @RestController
-@RequestMapping("/api/carritoProducto")
+@RequestMapping("/api/carrito/{usuarioId}/carritoProducto")
 @CrossOrigin(origins = "http://localhost:3000") // Habilitar CORS para permitir solicitudes desde el frontend en el puerto 3000
 public class CarritoProductoController {
 
     @Autowired
     private CarritoProductoService carritoProductoService;
-    
-    @Autowired
-    private ProductoService productoService;
 
-    @PostMapping
-    public ResponseEntity<CarritoProducto> agregarProductoAlCarrito(@RequestBody CarritoProducto carritoProducto) {
-        // Verificar si hay suficiente stock antes de agregar el producto al carrito
-        boolean stockDisponible = productoService.verificarStockDisponible(carritoProducto.getProductoId(), carritoProducto.getCantidad());
-        if (stockDisponible) {
-            CarritoProducto savedCarritoProducto = carritoProductoService.agregarProductoAlCarrito(carritoProducto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedCarritoProducto);
-        } else {
-            return ResponseEntity.badRequest().body(null); // Retornar un error 400 si no hay suficiente stock
-        }
+    @PostMapping("/producto")
+    public ResponseEntity<CarritoProducto> agregarProductoAlCarrito(@PathVariable String usuarioId, @RequestBody CarritoProducto carritoProducto) {
+        // Lógica para agregar el producto al carrito
+        CarritoProducto savedCarritoProducto = carritoProductoService.agregarProductoAlCarrito(carritoProducto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedCarritoProducto);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarProductoDelCarrito(@PathVariable String id) {
-        carritoProductoService.eliminarProductoDelCarrito(id);
+    @DeleteMapping("/producto/{productoId}")
+    public ResponseEntity<Void> eliminarProductoDelCarrito(@PathVariable String usuarioId, @PathVariable String productoId) {
+        // Lógica para eliminar el producto del carrito
+        carritoProductoService.eliminarProductoDelCarrito(productoId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CarritoProducto> obtenerProductoEnCarrito(@PathVariable String id) {
-        Optional<CarritoProducto> carritoProducto = carritoProductoService.obtenerProductoEnCarrito(id);
+    @GetMapping("/producto/{productoId}")
+    public ResponseEntity<CarritoProducto> obtenerProductoEnCarrito(@PathVariable String usuarioId, @PathVariable String productoId) {
+        // Lógica para obtener el producto del carrito
+        Optional<CarritoProducto> carritoProducto = carritoProductoService.obtenerProductoEnCarrito(productoId);
         return carritoProducto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

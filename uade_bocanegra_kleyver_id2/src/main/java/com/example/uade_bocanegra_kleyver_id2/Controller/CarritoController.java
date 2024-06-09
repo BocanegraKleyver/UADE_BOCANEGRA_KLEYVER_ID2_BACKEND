@@ -30,8 +30,8 @@ public class CarritoController {
 
     @GetMapping
     public ResponseEntity<List<Carrito>> getAllCarritos() {
-        List<Carrito> carrito = carritoService.getAllCarritos();
-        return ResponseEntity.ok(carrito);
+        List<Carrito> carritos = carritoService.getAllCarritos();
+        return ResponseEntity.ok(carritos);
     }
 
     @GetMapping("/{usuarioId}")
@@ -39,6 +39,7 @@ public class CarritoController {
         Optional<Carrito> carrito = carritoService.obtenerCarritoPorUsuarioId(usuarioId);
         return carrito.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
     @PostMapping("/{usuarioId}")
     public ResponseEntity<Carrito> crearCarrito(@PathVariable String usuarioId) {
         Optional<Carrito> carritoExistente = carritoService.obtenerCarritoPorUsuarioId(usuarioId);
@@ -52,22 +53,20 @@ public class CarritoController {
         }
     }
 
-    @PutMapping("/{usuarioId}/producto")
+    @PutMapping("/{usuarioId}/carritoProducto/producto")
     public ResponseEntity<Carrito> agregarProductosAlCarrito(@PathVariable String usuarioId, @RequestBody List<CarritoProducto> productos) {
         Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioId);
         if (carritoOptional.isPresent()) {
             Carrito carrito = carritoOptional.get();
-            carrito.getProductos().addAll(productos); // Aquí está el problema
-            Carrito updatedCarrito = carritoService.actualizarCarrito(carrito);
-            return ResponseEntity.ok(updatedCarrito);
+            // Lógica para agregar productos al carrito
+            carritoService.agregarProductosAlCarrito(carrito, productos);
+            return ResponseEntity.ok(carrito);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-    
-    
 
-    @DeleteMapping("/{usuarioId}/producto/{productoId}")
+    @DeleteMapping("/{usuarioId}/carritoProducto/producto/{productoId}")
     public ResponseEntity<Void> eliminarProductoDelCarrito(@PathVariable String usuarioId, @PathVariable String productoId) {
         carritoService.eliminarProductoDelCarrito(usuarioId, productoId);
         return ResponseEntity.noContent().build();

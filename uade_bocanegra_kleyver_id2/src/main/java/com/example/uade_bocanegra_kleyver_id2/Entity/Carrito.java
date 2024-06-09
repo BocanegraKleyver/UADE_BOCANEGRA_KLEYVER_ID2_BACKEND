@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
 @Document(collection = "carrito")
 public class Carrito {
 
@@ -17,17 +16,20 @@ public class Carrito {
     private String estado; // activo, abandonado, comprado, etc.
     private Date fechaCreacion;
     private Date fechaModificacion;
-    private List<CarritoProducto> carritoProducto = new ArrayList<>();
+    private List<CarritoProducto> carritoProductos = new ArrayList<>();
+    private double precioTotal;
 
     public Carrito() {}
 
-    public Carrito(String usuarioId, String estado, Date fechaCreacion, Date fechaModificacion, List<CarritoProducto> carritoProducto) {
+    public Carrito(String usuarioId, String estado, Date fechaCreacion, Date fechaModificacion, List<CarritoProducto> carritoProductos, double precioTotal) {
         this.usuarioId = usuarioId;
         this.estado = estado;
         this.fechaCreacion = fechaCreacion;
         this.fechaModificacion = fechaModificacion;
-        this.carritoProducto = new ArrayList<>(); // Inicializar la lista aquí
+        this.carritoProductos = carritoProductos; // Inicializar la lista con la que se recibe como parámetro
+        this.precioTotal = precioTotal;
     }
+
     // Getters y Setters
 
     public String getId() {
@@ -70,20 +72,19 @@ public class Carrito {
         this.fechaModificacion = fechaModificacion;
     }
 
-
-    public List<CarritoProducto> getProductos() {
-        if (carritoProducto == null) {
-            carritoProducto = new ArrayList<>();
-        }
-        return carritoProducto;
+    public List<CarritoProducto> getCarritoProductos() {
+        return carritoProductos;
     }
 
-    
-    public void setProductos(List<CarritoProducto> carritoProducto) {
-        this.carritoProducto = carritoProducto;
+    public void setCarritoProductos(List<CarritoProducto> carritoProductos) {
+        this.carritoProductos = carritoProductos;
     }
 
+    public double getPrecioTotal() {
+        return precioTotal;
+    }
 
+    public void setPrecioTotal(double precioTotal) {
+        this.precioTotal = precioTotal;
+    }
 }
-
-

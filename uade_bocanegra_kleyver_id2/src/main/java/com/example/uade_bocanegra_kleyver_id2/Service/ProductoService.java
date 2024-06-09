@@ -53,8 +53,8 @@ public class ProductoService {
         productoCacheService.removeFromCache(id);
     }
 
-       // Método para obtener la cantidad disponible en stock de un producto
-       public int obtenerCantidadDisponibleEnStock(String productoId) {
+    // Método para obtener la cantidad disponible en stock de un producto
+    public int obtenerCantidadDisponibleEnStock(String productoId) {
         Optional<Producto> optionalProducto = getProductoById(productoId);
         if (optionalProducto.isPresent()) {
             Producto producto = optionalProducto.get();
@@ -63,16 +63,14 @@ public class ProductoService {
         return 0; // Retornamos 0 si el producto no se encuentra o no tiene cantidad definida
     }
 
-// Método para verificar si hay suficiente stock disponible
-public boolean verificarStockDisponible(String productoId, int cantidadRequerida) {
-    Optional<Producto> optionalProducto = getProductoById(productoId);
-    if (optionalProducto.isPresent()) {
-        Producto producto = optionalProducto.get();
-        int cantidadDisponible = producto.getCantidad();
-        return cantidadDisponible >= cantidadRequerida;
+    // Método para verificar si hay suficiente stock disponible
+    public boolean verificarStockDisponible(String productoId, int cantidadRequerida) {
+        Optional<Producto> optionalProducto = getProductoById(productoId);
+        if (optionalProducto.isPresent()) {
+            Producto producto = optionalProducto.get();
+            int cantidadDisponible = producto.getCantidad();
+            return cantidadDisponible >= cantidadRequerida;
+        }
+        return false; // Si el producto no se encuentra, retornamos falso
     }
-    return false; // Si el producto no se encuentra, retornamos falso
-}
-
-
 }

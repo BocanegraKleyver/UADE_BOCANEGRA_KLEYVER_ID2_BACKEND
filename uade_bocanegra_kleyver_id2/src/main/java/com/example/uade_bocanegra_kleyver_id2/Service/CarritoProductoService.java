@@ -15,15 +15,7 @@ public class CarritoProductoService {
     @Autowired
     private CarritoProductoRepository carritoProductoRepository;
 
-    @Autowired
-    private ProductoService productoService; // Importa el servicio de productos para obtener información sobre el stock
-
     public CarritoProducto agregarProductoAlCarrito(CarritoProducto carritoProducto) {
-        // Verificar si la cantidad solicitada está disponible en el stock
-        if (!verificarStockDisponible(carritoProducto.getProductoId(), carritoProducto.getCantidad())) {
-            throw new RuntimeException("No hay suficiente stock disponible para este producto.");
-        }
-
         // Generar un ID único para el carritoProducto
         String carritoProductoId = UUID.randomUUID().toString();
         carritoProducto.setId(carritoProductoId);
@@ -32,14 +24,6 @@ public class CarritoProductoService {
         CarritoProducto savedCarritoProducto = carritoProductoRepository.save(carritoProducto);
         return savedCarritoProducto;
     }
-
-    private boolean verificarStockDisponible(String productoId, int cantidad) {
-        // Obtener la cantidad disponible en stock del producto
-        int cantidadDisponible = productoService.obtenerCantidadDisponibleEnStock(productoId);
-        // Verificar si la cantidad solicitada es menor o igual que la disponible en stock
-        return cantidadDisponible >= cantidad;
-    }
-    
 
     public void eliminarProductoDelCarrito(String carritoProductoId) {
         // Eliminar el producto del carrito de la base de datos

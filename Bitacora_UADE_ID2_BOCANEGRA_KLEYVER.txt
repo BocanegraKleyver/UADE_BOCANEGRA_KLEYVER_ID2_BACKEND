@@ -15,3 +15,4 @@ Legajo: 1116590
 11: Cree carrito, y carrito producto, ambos impactan en la BD, falta la logica de cantidad en el carrito. Por postman me da id carrito null.
 12: Ahora al loguear crea el carrito con el id del usuario, y crea la sesion, falta manejar el cierre de sesion la fecha, y proceder con la Actividadusuario.
 13: Registro datos en Actividadusuario
+14: Modificacion de carrito , carrito producto

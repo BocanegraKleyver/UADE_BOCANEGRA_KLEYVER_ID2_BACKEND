@@ -10,23 +10,21 @@ public class CarritoProducto {
     private String id;
     private String productoId;
     private int cantidad;
-    private double precioUnitario;
-
+    private double precioCarritoDelProducto;
 
     public CarritoProducto() {}
-    
-    public CarritoProducto(String productoId, int cantidad, double precioUnitario) {
+
+    public CarritoProducto(String productoId, int cantidad, double precioCarritoDelProducto) {
         this.productoId = productoId;
         this.cantidad = cantidad;
-        this.precioUnitario = precioUnitario;
+        this.precioCarritoDelProducto = precioCarritoDelProducto;
     }
-    
+
     // Getters y setters
 
     public String getId() {
         return id;
     }
-
 
     public void setId(String id) {
         this.id = id;
@@ -48,11 +46,11 @@ public class CarritoProducto {
         this.cantidad = cantidad;
     }
 
-    public double getPrecioUnitario() {
-        return precioUnitario;
+    public double getPrecioCarritoDelProducto() {
+        return precioCarritoDelProducto;
     }
 
-    public void setPrecioUnitario(double precioUnitario) {
-        this.precioUnitario = precioUnitario;
+    public void setPrecioCarritoDelProducto(double precioCarritoDelProducto) {
+        this.precioCarritoDelProducto = precioCarritoDelProducto;
     }
 }
