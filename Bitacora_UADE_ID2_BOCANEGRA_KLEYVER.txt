@@ -13,16 +13,4 @@ Legajo: 1116590
 9: test
 10: Test Entidades
 11: Cree carrito, y carrito producto, ambos impactan en la BD, falta la logica de cantidad en el carrito. Por postman me da id carrito null.
-
-
-sesion, actividadUsuario.
-5: Creo Documents, Repository, Service,Controller de: Usuario, sesion, actividadUsuario.
-6: Creo Documents en mongodb de: Producto, Carrito, CarritoProducto,CarritoHistorial,CarritoCambio.
-7: Creo Documents, Repository, Service,Controller de: Producto, Carrito, CarritoProducto,CarritoHistorial,CarritoCambio.
-8: Creo Documents en mongodb de: Pedido, Factura, Pago, RegistroFinanciero.
-9: Creo Documents, Repository, Service,Controller de: Pedido, Factura, Pago, RegistroFinanciero.
-10: Las URI funcionan correctamente para todos los endpoint.
-11: Redis para cache, y conteo visitas.
-12: Creacion carpetas backend y frontend.
-13: Merge frontend y backend.
-
+12: Ahora al loguear crea el carrito con el id del usuario, y crea la sesion, falta manejar el cierre de sesion la fecha, y proceder con la Actividadusuario.

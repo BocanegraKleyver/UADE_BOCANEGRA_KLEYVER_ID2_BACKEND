@@ -28,6 +28,15 @@ public class SesionService {
         return sesionRepository.findById(id).orElse(null);
     }
 
+    public Sesion getSesionActivaByUsuarioId(String usuarioId) {
+        // Obtener la sesión activa del usuario
+        List<Sesion> sesionesActivas = sesionRepository.findByUsuarioIdAndFechaFinIsNull(usuarioId);
+        if (!sesionesActivas.isEmpty()) {
+            return sesionesActivas.get(0);
+        }
+        return null; // Si no hay sesiones activas
+    }
+
     public Sesion iniciarSesion(Usuario usuario) {
         System.out.println("Iniciando sesión para el usuario: " + usuario.getUsuario());
         
@@ -86,6 +95,9 @@ public class SesionService {
         
         // Guardar la sesión
         sesionRepository.save(sesion);
+        
     }
+
+
 
 }

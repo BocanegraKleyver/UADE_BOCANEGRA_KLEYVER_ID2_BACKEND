@@ -62,6 +62,30 @@ public class UsuarioController {
 
 
     
+// @PostMapping("/login")
+// public ResponseEntity<?> loginUsuario(@RequestBody Usuario usuario) {
+//     boolean autenticacionExitosa = verificarCredenciales(usuario);
+
+//     if (autenticacionExitosa) {
+//         // Obtener el usuario autenticado
+//         Usuario usuarioAutenticado = usuarioService.autenticarUsuario(usuario.getUsuario(), usuario.getPassword());
+        
+//         // Verificar si el usuario ya tiene un carrito
+//         Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioAutenticado.getId());
+        
+//         if (!carritoOptional.isPresent()) {
+//             // Crear el carrito para el usuario si aún no tiene uno
+//             carritoService.crearCarrito(usuarioAutenticado.getId());
+//         }
+        
+//         // Crear la sesión para el usuario
+//         Sesion sesion = sesionService.iniciarSesion(usuarioAutenticado);
+        
+//         return ResponseEntity.ok(Map.of("message", "Inicio de sesión exitoso"));
+//     } else {
+//         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Usuario o contraseña incorrectos"));
+//     }
+// }
 @PostMapping("/login")
 public ResponseEntity<?> loginUsuario(@RequestBody Usuario usuario) {
     boolean autenticacionExitosa = verificarCredenciales(usuario);
@@ -88,20 +112,20 @@ public ResponseEntity<?> loginUsuario(@RequestBody Usuario usuario) {
 }
 
 
-
     
-    @PostMapping("/logout")
-    public ResponseEntity<?> logoutUsuario() {
-        // Aquí deberías obtener el ID del usuario que cierra sesión desde tu sistema de autenticación
-        String usuarioId = "obtener desde tu sistema de autenticación";
-        
-        // Marcar el carrito asociado al usuario como cerrado
-        carritoService.marcarCarritoComoCerrado(usuarioId);
-        
-        // Aquí podrías agregar más lógica de cierre de sesión, como limpiar los datos de sesión o invalidar el token de autenticación
-        
-        return ResponseEntity.ok().build();
-    }
+@PostMapping("/logout")
+public ResponseEntity<?> logoutUsuario() {
+    // Aquí deberías obtener el ID del usuario que cierra sesión desde tu sistema de autenticación
+    String usuarioId = "obtener desde tu sistema de autenticación";
+    
+    // Marcar el carrito asociado al usuario como cerrado
+    carritoService.marcarCarritoComoCerrado(usuarioId);
+    
+    // Aquí podrías agregar más lógica de cierre de sesión, como limpiar los datos de sesión o invalidar el token de autenticación
+    
+    return ResponseEntity.ok().build();
+}
+
 
 
 
