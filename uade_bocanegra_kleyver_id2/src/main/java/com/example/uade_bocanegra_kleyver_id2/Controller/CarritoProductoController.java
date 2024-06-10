@@ -15,10 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.uade_bocanegra_kleyver_id2.Entity.Carrito;
 import com.example.uade_bocanegra_kleyver_id2.Entity.CarritoProducto;
+import com.example.uade_bocanegra_kleyver_id2.Request.CarritoProductoRequest;
 import com.example.uade_bocanegra_kleyver_id2.Service.CarritoProductoService;
-import com.example.uade_bocanegra_kleyver_id2.Service.CarritoService;
 
 @RestController
 @RequestMapping("/api/carritoProducto")
@@ -27,34 +26,37 @@ public class CarritoProductoController {
 
     @Autowired
     private CarritoProductoService carritoProductoService;
-    @Autowired
-    private CarritoService carritoService;
 
-    @PostMapping("/{usuarioId}/producto")
-    public ResponseEntity<List<CarritoProducto>> agregarProductosAlCarrito(@PathVariable String usuarioId, @RequestBody List<CarritoProducto> productos) {
-        Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioId);
-        if (carritoOptional.isPresent()) {
-            Carrito carrito = carritoOptional.get();
-            List<CarritoProducto> savedProductos = carritoProductoService.agregarProductosAlCarrito(carrito, productos);
+    
 
-            // Actualizar el carrito en la base de datos con los nuevos productos
-            carritoService.actualizarCarrito(carrito);
+    @GetMapping
+    public ResponseEntity<List<CarritoProducto>> getAllCarritoProducto() {
+        List<CarritoProducto> carritoProductos = carritoProductoService.getAllCarritoProducto();
+        return ResponseEntity.ok(carritoProductos);
+    }
+    
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedProductos);
-        } else {
-            return ResponseEntity.notFound().build();
+
+    @PostMapping("/{carritoId}/producto")
+    public ResponseEntity<?> agregarProductoAlCarrito(@PathVariable String carritoId, @RequestBody CarritoProductoRequest productoRequest) {
+        try {
+            CarritoProducto savedProducto = carritoProductoService.agregarProductoAlCarrito(carritoId, productoRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedProducto);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+    
 
-    @DeleteMapping("/producto/{productoId}")
-    public ResponseEntity<Void> eliminarProductoDelCarrito(@PathVariable String productoId) {
-        carritoProductoService.eliminarProductoDelCarrito(productoId);
+    @DeleteMapping("/producto/{id}")
+    public ResponseEntity<Void> eliminarProductoDelCarrito(@PathVariable String id) {
+        carritoProductoService.eliminarProductoDelCarrito(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/producto/{productoId}")
-    public ResponseEntity<CarritoProducto> obtenerProductoEnCarrito(@PathVariable String productoId) {
-        Optional<CarritoProducto> carritoProducto = carritoProductoService.obtenerProductoEnCarrito(productoId);
+    @GetMapping("/producto/{id}")
+    public ResponseEntity<CarritoProducto> obtenerProductoEnCarrito(@PathVariable String id) {
+        Optional<CarritoProducto> carritoProducto = carritoProductoService.obtenerProductoEnCarrito(id);
         return carritoProducto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

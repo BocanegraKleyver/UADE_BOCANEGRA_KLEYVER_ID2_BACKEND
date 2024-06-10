@@ -31,7 +31,9 @@ public class ProductoService {
             return Optional.of(producto);
         } else {
             // Si no está en caché, consultamos en la base de datos
-            return productoRepository.findById(id);
+            Optional<Producto> productoOpt = productoRepository.findById(id);
+            productoOpt.ifPresent(p -> productoCacheService.addToCache(p.getId(), p));
+            return productoOpt;
         }
     }
 
@@ -53,8 +55,6 @@ public class ProductoService {
         productoCacheService.removeFromCache(id);
     }
 
-    // Métodos adicionales según sea necesario
-
     // Método para obtener la cantidad disponible en stock de un producto
     public int obtenerCantidadDisponibleEnStock(String productoId) {
         Optional<Producto> optionalProducto = getProductoById(productoId);
@@ -75,6 +75,4 @@ public class ProductoService {
         }
         return false; // Si el producto no se encuentra, retornamos falso
     }
-
-    // Otros métodos según sea necesario
 }

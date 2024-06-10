@@ -40,35 +40,27 @@ public class CarritoController {
 
     @PostMapping("/{usuarioId}")
     public ResponseEntity<Carrito> crearCarrito(@PathVariable String usuarioId) {
-        Optional<Carrito> carritoExistente = carritoService.obtenerCarritoPorUsuarioId(usuarioId);
-        if (carritoExistente.isPresent()) {
-            // Si el usuario ya tiene un carrito, devolver ese carrito
-            return ResponseEntity.ok(carritoExistente.get());
-        } else {
-            // Si el usuario no tiene carrito, crear uno nuevo
-            Carrito carritoNuevo = carritoService.crearCarrito(usuarioId);
-            return ResponseEntity.status(HttpStatus.CREATED).body(carritoNuevo);
-        }
+        Carrito carritoNuevo = carritoService.crearCarrito(usuarioId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(carritoNuevo);
     }
 
-    @PostMapping("/{usuarioId}/carritoProducto/producto")
-    public ResponseEntity<Carrito> agregarProductosAlCarrito(@PathVariable String usuarioId, @RequestBody List<String> productosIds) {
+    @PostMapping("/{usuarioId}/carritoProducto")
+    public ResponseEntity<Carrito> agregarCarritoProductoAlCarrito(@PathVariable String usuarioId, @RequestBody List<String> idsCarritoProducto) {
         Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioId);
         if (carritoOptional.isPresent()) {
             Carrito carrito = carritoOptional.get();
-            // Lógica para agregar productos al carrito
-            carritoService.agregarProductosAlCarrito(carrito, productosIds);
+            // Lógica para agregar IDs de carritoProducto al carrito
+            carritoService.agregarIdsCarritoProductoAlCarrito(carrito, idsCarritoProducto);
             return ResponseEntity.ok(carrito);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
     
-
     @DeleteMapping("/{usuarioId}/carritoProducto/producto/{productoId}")
-    public ResponseEntity<Void> eliminarProductoDelCarrito(@PathVariable String usuarioId, @PathVariable String productoId) {
+    public ResponseEntity<Void> eliminarCarritoProductoDelCarrito(@PathVariable String usuarioId, @PathVariable String productoId) {
         // Llamar al método adecuado en el servicio
-        carritoService.eliminarProductoDelCarrito(usuarioId, productoId);
+        carritoService.eliminarCarritoProductoDelCarrito(usuarioId, productoId);
         return ResponseEntity.noContent().build();
     }
 

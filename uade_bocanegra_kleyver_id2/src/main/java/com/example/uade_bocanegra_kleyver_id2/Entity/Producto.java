@@ -1,5 +1,7 @@
 package com.example.uade_bocanegra_kleyver_id2.Entity;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,7 +15,7 @@ public class Producto {
     private double precio;
     private int cantidad;
     private String imagen;
-    private String comentario;
+    private List<String> comentarios; // Cambiado a lista de comentarios
     private String video;
 
     // Constructor
@@ -69,12 +71,12 @@ public class Producto {
         this.imagen = imagen;
     }
 
-    public String getComentario() {
-        return comentario;
+    public List<String> getComentarios() {
+        return comentarios;
     }
 
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
+    public void setComentarios(List<String> comentarios) {
+        this.comentarios = comentarios;
     }
 
     public String getVideo() {

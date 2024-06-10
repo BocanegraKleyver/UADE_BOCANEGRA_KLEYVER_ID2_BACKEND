@@ -1,21 +1,22 @@
 package com.example.uade_bocanegra_kleyver_id2.Entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "carritoProducto")
+@CompoundIndex(def = "{'carritoId': 1, 'productoId': 1}", unique = true)
 public class CarritoProducto {
 
     @Id
     private String id;
+    @Indexed
     private String productoId;
     private int cantidad;
     private double precioCarritoDelProducto;
+    @Indexed
     private String carritoId; // Id del carrito asociado
-
-    // Constructor
-    public CarritoProducto() {
-    }
 
     // Getters y Setters
     public String getId() {

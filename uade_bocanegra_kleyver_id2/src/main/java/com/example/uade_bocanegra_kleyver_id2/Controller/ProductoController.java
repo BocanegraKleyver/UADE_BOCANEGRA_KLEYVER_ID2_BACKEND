@@ -21,7 +21,7 @@ import com.example.uade_bocanegra_kleyver_id2.Service.ProductoService;
 
 @RestController
 @RequestMapping("/api/producto")
-@CrossOrigin(origins = "http://localhost:3000") // Habilitar CORS para permitir solicitudes desde el frontend en el puerto 3000
+@CrossOrigin(origins = "http://localhost:3000")
 public class ProductoController {
 
     @Autowired
@@ -61,8 +61,4 @@ public class ProductoController {
         productoService.deleteProducto(id);
         return ResponseEntity.noContent().build();
     }
-
-
-
-    // Otros métodos según sea necesario
 }

@@ -1,6 +1,5 @@
 package com.example.uade_bocanegra_kleyver_id2.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.uade_bocanegra_kleyver_id2.Entity.Carrito;
-import com.example.uade_bocanegra_kleyver_id2.Entity.CarritoProducto;
 import com.example.uade_bocanegra_kleyver_id2.Redis.CacheService;
 import com.example.uade_bocanegra_kleyver_id2.Repository.CarritoRepository;
 
@@ -40,6 +38,7 @@ public class CarritoService {
         
         return savedCarrito;
     }
+    
     public Carrito actualizarCarrito(Carrito carrito) {
         carrito.setFechaModificacion(new Date());
         Carrito updatedCarrito = carritoRepository.save(carrito);
@@ -87,31 +86,32 @@ public class CarritoService {
         return carritoRepository.findAll();
     }
 
-    // Método para agregar productos al carrito
-    public List<CarritoProducto> agregarProductosAlCarrito(Carrito carrito, List<String> productosIds) {
-        List<CarritoProducto> savedProductos = new ArrayList<>();
-        // Lógica para crear o cargar los productos y asociarlos al carrito
-        for (String productoId : productosIds) {
-            CarritoProducto carritoProducto = new CarritoProducto();
-            // Asignar el carrito y el ID del producto al carritoProducto
-            carritoProducto.setCarritoId(carrito.getId());
-            carritoProducto.setProductoId(productoId); // Asignar el ID del producto
-            // Puedes agregar más propiedades al carritoProducto si es necesario
-            savedProductos.add(carritoProducto);
-        }
-        // Guardar los productos en la base de datos si es necesario
-        // carritoProductoRepository.saveAll(savedProductos);
-        return savedProductos;
+    // Método para agregar IDs de carritoProducto al carrito
+    public void agregarIdsCarritoProductoAlCarrito(Carrito carrito, List<String> carritoProductoIds) {
+        // Asignar la lista de IDs de carritoProducto al carrito
+        carrito.setCarritoProductoId(carritoProductoIds);
+        // Actualizar el carrito en la base de datos
+        actualizarCarrito(carrito);
     }
 
-    public void eliminarProductoDelCarrito(String usuarioId, String productoId) {
+    public void eliminarCarritoProductoDelCarrito(String usuarioId, String carritoProductoId) {
         Optional<Carrito> carritoOptional = obtenerCarritoPorUsuarioId(usuarioId);
         if (carritoOptional.isPresent()) {
             Carrito carrito = carritoOptional.get();
-            // Lógica para eliminar el producto del carrito
-            carrito.getCarritoProductos().removeIf(producto -> producto.getProductoId().equals(productoId));
+            // Lógica para eliminar el carritoProducto del carrito por su ID
+            carrito.getCarritoProductoId().removeIf(id -> id.equals(carritoProductoId));
+            // Actualizar el carrito en la base de datos
             actualizarCarrito(carrito);
         }
+    }
 
-}
+    // Método para crear un nuevo carrito cuando se realiza una compra
+    public Carrito crearNuevoCarritoDespuesCompra(Carrito carritoAnterior) {
+        // Desactivar el carrito anterior
+        carritoAnterior.setActivo(false);
+        actualizarCarrito(carritoAnterior);
+        
+        // Crear un nuevo carrito
+        return crearCarrito(carritoAnterior.getUsuarioId());
+    }
 }

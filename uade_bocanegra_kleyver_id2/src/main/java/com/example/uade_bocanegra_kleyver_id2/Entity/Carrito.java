@@ -6,22 +6,20 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "carrito")
+@Document(collection = "carritos")
 public class Carrito {
 
     @Id
     private String id;
     private String usuarioId;
-    private List<CarritoProducto> carritoProductos;
+    private List<String> carritoProductoId; // Cambiado a List<String> para almacenar los IDs de los productos
     private Date fechaCreacion;
     private Date fechaModificacion;
     private boolean activo;
-
-    // Constructor
-    public Carrito() {
-    }
+    private double precioTotal; // Nuevo campo para el precio total del carrito
 
     // Getters y Setters
+
     public String getId() {
         return id;
     }
@@ -38,12 +36,12 @@ public class Carrito {
         this.usuarioId = usuarioId;
     }
 
-    public List<CarritoProducto> getCarritoProductos() {
-        return carritoProductos;
+    public List<String> getCarritoProductoId() {
+        return carritoProductoId;
     }
 
-    public void setCarritoProductos(List<CarritoProducto> carritoProductos) {
-        this.carritoProductos = carritoProductos;
+    public void setCarritoProductoId(List<String> carritoProductoId) {
+        this.carritoProductoId = carritoProductoId;
     }
 
     public Date getFechaCreacion() {
@@ -70,14 +68,11 @@ public class Carrito {
         this.activo = activo;
     }
 
-    // Método para calcular el precio total del carrito
-    public double calcularPrecioTotal() {
-        double precioTotal = 0.0;
-        if (carritoProductos != null) {
-            for (CarritoProducto producto : carritoProductos) {
-                precioTotal += producto.getPrecioCarritoDelProducto();
-            }
-        }
+    public double getPrecioTotal() {
         return precioTotal;
+    }
+
+    public void setPrecioTotal(double precioTotal) {
+        this.precioTotal = precioTotal;
     }
 }
