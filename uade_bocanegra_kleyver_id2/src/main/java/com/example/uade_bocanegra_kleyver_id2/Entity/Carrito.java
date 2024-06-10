@@ -1,6 +1,5 @@
 package com.example.uade_bocanegra_kleyver_id2.Entity;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,25 +12,16 @@ public class Carrito {
     @Id
     private String id;
     private String usuarioId;
-    private String estado; // activo, abandonado, comprado, etc.
+    private List<CarritoProducto> carritoProductos;
     private Date fechaCreacion;
     private Date fechaModificacion;
-    private List<CarritoProducto> carritoProductos = new ArrayList<>();
-    private double precioTotal;
+    private boolean activo;
 
-    public Carrito() {}
-
-    public Carrito(String usuarioId, String estado, Date fechaCreacion, Date fechaModificacion, List<CarritoProducto> carritoProductos, double precioTotal) {
-        this.usuarioId = usuarioId;
-        this.estado = estado;
-        this.fechaCreacion = fechaCreacion;
-        this.fechaModificacion = fechaModificacion;
-        this.carritoProductos = carritoProductos; // Inicializar la lista con la que se recibe como parámetro
-        this.precioTotal = precioTotal;
+    // Constructor
+    public Carrito() {
     }
 
     // Getters y Setters
-
     public String getId() {
         return id;
     }
@@ -48,12 +38,12 @@ public class Carrito {
         this.usuarioId = usuarioId;
     }
 
-    public String getEstado() {
-        return estado;
+    public List<CarritoProducto> getCarritoProductos() {
+        return carritoProductos;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setCarritoProductos(List<CarritoProducto> carritoProductos) {
+        this.carritoProductos = carritoProductos;
     }
 
     public Date getFechaCreacion() {
@@ -72,19 +62,22 @@ public class Carrito {
         this.fechaModificacion = fechaModificacion;
     }
 
-    public List<CarritoProducto> getCarritoProductos() {
-        return carritoProductos;
+    public boolean isActivo() {
+        return activo;
     }
 
-    public void setCarritoProductos(List<CarritoProducto> carritoProductos) {
-        this.carritoProductos = carritoProductos;
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
 
-    public double getPrecioTotal() {
+    // Método para calcular el precio total del carrito
+    public double calcularPrecioTotal() {
+        double precioTotal = 0.0;
+        if (carritoProductos != null) {
+            for (CarritoProducto producto : carritoProductos) {
+                precioTotal += producto.getPrecioCarritoDelProducto();
+            }
+        }
         return precioTotal;
-    }
-
-    public void setPrecioTotal(double precioTotal) {
-        this.precioTotal = precioTotal;
     }
 }

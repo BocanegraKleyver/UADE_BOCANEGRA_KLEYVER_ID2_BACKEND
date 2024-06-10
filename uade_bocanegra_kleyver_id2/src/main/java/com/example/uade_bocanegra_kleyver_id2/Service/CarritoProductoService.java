@@ -1,11 +1,12 @@
 package com.example.uade_bocanegra_kleyver_id2.Service;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.uade_bocanegra_kleyver_id2.Entity.Carrito;
 import com.example.uade_bocanegra_kleyver_id2.Entity.CarritoProducto;
 import com.example.uade_bocanegra_kleyver_id2.Repository.CarritoProductoRepository;
 
@@ -15,14 +16,13 @@ public class CarritoProductoService {
     @Autowired
     private CarritoProductoRepository carritoProductoRepository;
 
-    public CarritoProducto agregarProductoAlCarrito(CarritoProducto carritoProducto) {
-        // Generar un ID único para el carritoProducto
-        String carritoProductoId = UUID.randomUUID().toString();
-        carritoProducto.setId(carritoProductoId);
-        
-        // Guardar el producto en el carrito en la base de datos
-        CarritoProducto savedCarritoProducto = carritoProductoRepository.save(carritoProducto);
-        return savedCarritoProducto;
+    public List<CarritoProducto> agregarProductosAlCarrito(Carrito carrito, List<CarritoProducto> productos) {
+        for (CarritoProducto producto : productos) {
+            producto.setCarritoId(carrito.getId());
+        }
+        // Guardar los productos en la base de datos
+        List<CarritoProducto> savedProductos = carritoProductoRepository.saveAll(productos);
+        return savedProductos;
     }
 
     public void eliminarProductoDelCarrito(String carritoProductoId) {
@@ -34,4 +34,6 @@ public class CarritoProductoService {
         // Buscar el producto en el carrito por su ID
         return carritoProductoRepository.findById(carritoProductoId);
     }
+
+    // Otros métodos según sea necesario
 }

@@ -11,17 +11,13 @@ public class CarritoProducto {
     private String productoId;
     private int cantidad;
     private double precioCarritoDelProducto;
+    private String carritoId; // Id del carrito asociado
 
-    public CarritoProducto() {}
-
-    public CarritoProducto(String productoId, int cantidad, double precioCarritoDelProducto) {
-        this.productoId = productoId;
-        this.cantidad = cantidad;
-        this.precioCarritoDelProducto = precioCarritoDelProducto;
+    // Constructor
+    public CarritoProducto() {
     }
 
-    // Getters y setters
-
+    // Getters y Setters
     public String getId() {
         return id;
     }
@@ -52,5 +48,13 @@ public class CarritoProducto {
 
     public void setPrecioCarritoDelProducto(double precioCarritoDelProducto) {
         this.precioCarritoDelProducto = precioCarritoDelProducto;
+    }
+
+    public String getCarritoId() {
+        return carritoId;
+    }
+
+    public void setCarritoId(String carritoId) {
+        this.carritoId = carritoId;
     }
 }

@@ -61,4 +61,8 @@ public class ProductoController {
         productoService.deleteProducto(id);
         return ResponseEntity.noContent().build();
     }
+
+
+
+    // Otros métodos según sea necesario
 }

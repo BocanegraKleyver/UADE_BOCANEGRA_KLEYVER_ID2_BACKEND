@@ -1,14 +1,18 @@
 package com.example.uade_bocanegra_kleyver_id2.Repository;
 
-import java.util.Optional;
+import java.sql.Date;
+import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.example.uade_bocanegra_kleyver_id2.Entity.Carrito;
 
 public interface CarritoRepository extends MongoRepository<Carrito, String> {
-    Optional<Carrito> findByUsuarioId(String usuarioId);
+
+    List<Carrito> findByUsuarioId(String usuarioId);
+
+    List<Carrito> findByActivo(boolean activo);
+    List<Carrito> findByFechaCreacionBetween(Date startDate, Date endDate);
+
+    // Otros métodos según sea necesario
 }
-
-
-

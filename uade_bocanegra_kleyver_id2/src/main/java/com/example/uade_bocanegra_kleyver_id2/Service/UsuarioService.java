@@ -72,9 +72,8 @@ public class UsuarioService {
 
     public boolean isCarritoActivo(String usuarioId) {
         Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioId);
-        return carritoOptional.isPresent() && carritoOptional.get().getEstado().equals("ACTIVO");
+        return carritoOptional.isPresent() && carritoOptional.get().isActivo();
     }
-
 
 
     public Usuario autenticarUsuario(String nombreUsuario, String password) {
