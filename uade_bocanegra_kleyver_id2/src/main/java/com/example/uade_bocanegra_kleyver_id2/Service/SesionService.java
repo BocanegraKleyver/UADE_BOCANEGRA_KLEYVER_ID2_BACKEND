@@ -2,6 +2,7 @@ package com.example.uade_bocanegra_kleyver_id2.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional; // Importa Optional de java.util
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +18,9 @@ public class SesionService {
     @Autowired
     private SesionRepository sesionRepository;
 
-
     @Autowired
-    private CacheService<Sesion> sesionCacheService; // Corregido para que sea CacheService<Sesion>
+    private CacheService<Sesion> sesionCacheService;
 
-    
     public List<Sesion> getAllSesiones() {
         return sesionRepository.findAll();
     }
@@ -31,75 +30,32 @@ public class SesionService {
     }
 
     public Sesion getSesionActivaByUsuarioId(String usuarioId) {
-        // Obtener la sesión activa del usuario
-        List<Sesion> sesionesActivas = sesionRepository.findByUsuarioIdAndFechaFinIsNull(usuarioId);
-        if (!sesionesActivas.isEmpty()) {
-            return sesionesActivas.get(0);
-        }
-        return null; // Si no hay sesiones activas
+        Optional<Sesion> sesionOptional = sesionRepository.findFirstByUsuarioIdAndFechaFinIsNullOrderByFechaInicioDesc(usuarioId);
+        return sesionOptional.orElse(null); // Si está presente, devuelve la sesión, de lo contrario, devuelve null
     }
 
     public Sesion iniciarSesion(Usuario usuario) {
-        System.out.println("Iniciando sesión para el usuario: " + usuario.getUsuario());
-        
-        // Crear una nueva sesión
-        Sesion sesion = new Sesion();
-        
-        // Obtener el ID del usuario como String
-        String usuarioId = usuario.getId();
-        System.out.println("ID del usuario: " + usuarioId);
-        
-        // Setear el ID del usuario en la sesión
-        sesion.setUsuarioId(usuarioId);
-        
-        // Setear la fecha de inicio
-        sesion.setFechaInicio(new Date());
-        
-        // Guardar la sesión
+        Sesion sesion = new Sesion(usuario.getId(), new Date(), null); // Usar ID de usuario y fecha actual para iniciar sesión
         Sesion savedSesion = sesionRepository.save(sesion);
-        System.out.println("Sesión iniciada y guardada correctamente: " + savedSesion.getId());
-        
-        // Agregar la sesión a la caché
         sesionCacheService.addToCache(savedSesion.getId(), savedSesion);
-    
         return savedSesion;
     }
 
     public Sesion cerrarSesion(String id) {
-        Sesion existingSesion = sesionRepository.findById(id).orElse(null);
-        if (existingSesion != null) {
+        Optional<Sesion> existingSesionOptional = sesionRepository.findById(id);
+        if (existingSesionOptional.isPresent()) {
+            Sesion existingSesion = existingSesionOptional.get();
             existingSesion.setFechaFin(new Date());
             sesionRepository.save(existingSesion);
             sesionCacheService.removeFromCache(id);
             return existingSesion;
-        } else {
-            return null;
         }
+        return null; // Retornar null si no se encuentra la sesión
     }
+    
 
     public void deleteSesion(String id) {
         sesionRepository.deleteById(id);
         sesionCacheService.removeFromCache(id);
     }
-
-    public void registrarInicioSesion(Sesion sesion2) {
-        // Crear una nueva sesión
-        Sesion sesion = new Sesion();
-        
-        // Obtener el ID del usuario como String
-        String usuarioId = sesion2.getId();
-        
-        // Setear el ID del usuario en la sesión
-        sesion.setUsuarioId(usuarioId);
-        
-        // Setear la fecha de inicio
-        sesion.setFechaInicio(new Date());
-        
-        // Guardar la sesión
-        sesionRepository.save(sesion);
-        
-    }
-
-
-
 }

@@ -13,8 +13,6 @@ import com.example.uade_bocanegra_kleyver_id2.Repository.UsuarioActividadReposit
 @Service
 public class UsuarioActividadService {
 
-    
-
     @Autowired
     private UsuarioActividadRepository usuarioActividadRepository;
 
@@ -31,8 +29,8 @@ public class UsuarioActividadService {
 
     public UsuarioActividad registrarActividad(String sesionId, String actividad) {
         UsuarioActividad usuarioActividad = new UsuarioActividad();
-        usuarioActividad.setSesionId(sesionId);
-        usuarioActividad.setActividad(actividad);
+        usuarioActividad.setSesionId(sesionId); // Establecer el ID de la sesión
+        usuarioActividad.setActividad(actividad); // Establecer la actividad
         usuarioActividad.setFecha(new Date());
         UsuarioActividad savedUsuarioActividad = usuarioActividadRepository.save(usuarioActividad);
         usuarioActividadCacheService.addToCache(savedUsuarioActividad.getId(), savedUsuarioActividad);
@@ -43,6 +41,4 @@ public class UsuarioActividadService {
         usuarioActividadRepository.deleteById(id);
         usuarioActividadCacheService.removeFromCache(id);
     }
-
-
 }

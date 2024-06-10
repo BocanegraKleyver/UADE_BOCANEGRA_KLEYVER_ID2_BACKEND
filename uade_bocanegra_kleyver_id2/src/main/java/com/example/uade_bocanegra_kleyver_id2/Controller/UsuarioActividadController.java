@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,11 +37,14 @@ public class UsuarioActividadController {
 
     @PostMapping("/registrar")
     public ResponseEntity<UsuarioActividad> registrarActividad(@RequestBody UsuarioActividad usuarioActividad) {
-        UsuarioActividad nuevaActividad = usuarioActividadService.registrarActividad(usuarioActividad.getSesionId(), usuarioActividad.getActividad());
+        String sesionId = usuarioActividad.getSesionId(); // Obtener el ID de la sesión desde el objeto UsuarioActividad
+        String actividad = usuarioActividad.getActividad(); // Obtener la actividad del objeto UsuarioActividad
+    
+        UsuarioActividad nuevaActividad = usuarioActividadService.registrarActividad(sesionId, actividad);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevaActividad);
     }
 
-    @PostMapping("/eliminar/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarUsuarioActividad(@PathVariable String id) {
         usuarioActividadService.deleteUsuarioActividad(id);
         return ResponseEntity.ok().build();

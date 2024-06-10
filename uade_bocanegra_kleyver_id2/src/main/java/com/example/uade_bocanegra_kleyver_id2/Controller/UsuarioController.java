@@ -1,5 +1,9 @@
 package com.example.uade_bocanegra_kleyver_id2.Controller;
 
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -71,22 +75,23 @@ private UsuarioActividadService usuarioActividadService;
         if (autenticacionExitosa) {
             // Obtener el usuario autenticado
             Usuario usuarioAutenticado = usuarioService.autenticarUsuario(usuario.getUsuario(), usuario.getPassword());
-            
+    
             // Verificar si el usuario ya tiene un carrito
             Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioAutenticado.getId());
-            
+    
             if (!carritoOptional.isPresent()) {
                 // Crear el carrito para el usuario si aún no tiene uno
                 carritoService.crearCarrito(usuarioAutenticado.getId());
                 System.out.println("Carrito creado al iniciar sesión para usuario: " + usuarioAutenticado.getId());
             }
-            
+    
             // Crear la sesión para el usuario
             Sesion sesion = sesionService.iniciarSesion(usuarioAutenticado);
-            
-            // Registrar la actividad de inicio de sesión
-            usuarioActividadService.registrarActividad(sesion.getId(), "Inició sesión");
-            
+    
+        // Registrar la actividad de inicio de sesión en UsuarioActividad
+        usuarioActividadService.registrarActividad(sesion.getId(), "Inició sesión");
+
+    
             // Enviar todos los datos del usuario
             return ResponseEntity.ok(usuarioAutenticado);
         } else {
@@ -111,14 +116,32 @@ private UsuarioActividadService usuarioActividadService;
         Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioId);
         carritoOptional.ifPresent(carrito -> System.out.println("Carrito " + (carrito.isActivo() ? "cambiado de estado a cerrado" : "marcado como cerrado") + " para usuario: " + usuarioId + ", ID del carrito: " + carrito.getId()));
         
-           // Imprimir mensaje de cierre de sesión
-    System.out.println("Usuario con ID: " + usuarioId + " ha cerrado su sesión");
-    
+        // Obtener la sesión activa del usuario
+        Sesion sesionActiva = sesionService.getSesionActivaByUsuarioId(usuarioId);
+        
+        if (sesionActiva != null) {
+            // Registrar la actividad de cierre de sesión en UsuarioActividad
+            usuarioActividadService.registrarActividad(sesionActiva.getId(), "Cerró sesión");
+            
+            // Imprimir mensaje de cierre de sesión
+            System.out.println("Usuario con ID: " + usuarioId + " ha cerrado su sesión");
+            
+            // Actualizar la fecha de fin de la sesión
+            LocalDateTime now = LocalDateTime.now();
+            Date fechaFin = Date.from(now.atZone(ZoneId.systemDefault()).toInstant()); // Convierte LocalDateTime a Date
+            sesionActiva.setFechaFin(fechaFin);
+            sesionService.cerrarSesion(sesionActiva.getId());
+        } else {
+            // Si no se encuentra una sesión activa, se devuelve un error
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró una sesión activa para el usuario");
+        }
+        
         // Aquí podrías agregar más lógica de cierre de sesión, como limpiar los datos de sesión o invalidar el token de autenticación
         
         return ResponseEntity.ok().build();
     }
-
+    
+    
 
 
     // Método para verificar las credenciales
