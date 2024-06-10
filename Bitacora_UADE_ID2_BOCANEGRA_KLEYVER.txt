@@ -16,3 +16,4 @@ Legajo: 1116590
 12: Ahora al loguear crea el carrito con el id del usuario, y crea la sesion, falta manejar el cierre de sesion la fecha, y proceder con la Actividadusuario.
 13: Registro datos en Actividadusuario
 14: Modificacion de carrito , carrito producto
+15: Funcion del ID usuario en el navbar

@@ -64,59 +64,35 @@ private UsuarioActividadService usuarioActividadService;
     }
 
 
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUsuario(@RequestBody Usuario usuario) {
+        boolean autenticacionExitosa = verificarCredenciales(usuario);
     
-// @PostMapping("/login")
-// public ResponseEntity<?> loginUsuario(@RequestBody Usuario usuario) {
-//     boolean autenticacionExitosa = verificarCredenciales(usuario);
-
-//     if (autenticacionExitosa) {
-//         // Obtener el usuario autenticado
-//         Usuario usuarioAutenticado = usuarioService.autenticarUsuario(usuario.getUsuario(), usuario.getPassword());
-        
-//         // Verificar si el usuario ya tiene un carrito
-//         Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioAutenticado.getId());
-        
-//         if (!carritoOptional.isPresent()) {
-//             // Crear el carrito para el usuario si aún no tiene uno
-//             carritoService.crearCarrito(usuarioAutenticado.getId());
-//         }
-        
-//         // Crear la sesión para el usuario
-//         Sesion sesion = sesionService.iniciarSesion(usuarioAutenticado);
-        
-//         return ResponseEntity.ok(Map.of("message", "Inicio de sesión exitoso"));
-//     } else {
-//         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Usuario o contraseña incorrectos"));
-//     }
-// }
-@PostMapping("/login")
-public ResponseEntity<?> loginUsuario(@RequestBody Usuario usuario) {
-    boolean autenticacionExitosa = verificarCredenciales(usuario);
-
-    if (autenticacionExitosa) {
-        // Obtener el usuario autenticado
-        Usuario usuarioAutenticado = usuarioService.autenticarUsuario(usuario.getUsuario(), usuario.getPassword());
-        
-        // Verificar si el usuario ya tiene un carrito
-        Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioAutenticado.getId());
-        
-        if (!carritoOptional.isPresent()) {
-            // Crear el carrito para el usuario si aún no tiene uno
-            carritoService.crearCarrito(usuarioAutenticado.getId());
+        if (autenticacionExitosa) {
+            // Obtener el usuario autenticado
+            Usuario usuarioAutenticado = usuarioService.autenticarUsuario(usuario.getUsuario(), usuario.getPassword());
+            
+            // Verificar si el usuario ya tiene un carrito
+            Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioAutenticado.getId());
+            
+            if (!carritoOptional.isPresent()) {
+                // Crear el carrito para el usuario si aún no tiene uno
+                carritoService.crearCarrito(usuarioAutenticado.getId());
+            }
+            
+            // Crear la sesión para el usuario
+            Sesion sesion = sesionService.iniciarSesion(usuarioAutenticado);
+            
+            // Registrar la actividad de inicio de sesión
+            usuarioActividadService.registrarActividad(sesion.getId(), "Inició sesión");
+            
+            // Enviar todos los datos del usuario
+            return ResponseEntity.ok(usuarioAutenticado);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Usuario o contraseña incorrectos"));
         }
-        
-        // Crear la sesión para el usuario
-        Sesion sesion = sesionService.iniciarSesion(usuarioAutenticado);
-        
-        // Registrar la actividad de inicio de sesión
-        usuarioActividadService.registrarActividad(sesion.getId(), "Inició sesión");
-        
-        return ResponseEntity.ok(Map.of("message", "Inicio de sesión exitoso"));
-    } else {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Usuario o contraseña incorrectos"));
     }
-}
-
+    
 
 
     
@@ -155,4 +131,7 @@ public ResponseEntity<?> logoutUsuario() {
     public void deleteUsuario(@PathVariable String id) {
         usuarioService.deleteUsuario(id);
     }
+
+
+
 }
