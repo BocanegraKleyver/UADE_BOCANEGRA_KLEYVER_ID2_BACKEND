@@ -18,4 +18,4 @@ Legajo: 1116590
 14: Modificacion de carrito , carrito producto
 15: Funcion del ID usuario en el navbar
 16: logica de carrito correcto con carritoProducto y produccto. vamos al frontend.
-17: Logica de sesion, usuarioActividad
+17: El login, logout, register, sesion y usuarioactividad (login logout) funcionan. Lo que sigue es validar los productos.

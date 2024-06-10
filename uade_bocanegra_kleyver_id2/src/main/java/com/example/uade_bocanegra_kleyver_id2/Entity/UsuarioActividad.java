@@ -10,11 +10,8 @@ public class UsuarioActividad {
 
     @Id
     private String id;
-
     private String sesionId; // Referencia a la sesión
-
     private String actividad; // Actividad del usuario
-
     private Date fecha;
 
     // Constructor
