@@ -32,6 +32,9 @@ public class CarritoService {
         carrito.setFechaModificacion(new Date());
         Carrito savedCarrito = carritoRepository.save(carrito);
         
+        // Agregar console.log para verificar
+        System.out.println("Carrito creado y guardado: " + savedCarrito.getId() + " para usuario: " + usuarioId);
+        
         // Aquí definimos la clave de la caché usando el ID del usuario
         String cacheKey = "carrito:" + usuarioId;
         carritoCacheService.addToCache(cacheKey, savedCarrito);
@@ -46,52 +49,60 @@ public class CarritoService {
         return updatedCarrito;
     }
 
+
     public Optional<Carrito> obtenerCarritoPorUsuarioId(String usuarioId) {
-        // Obtener la lista de carritos asociados al usuario
         List<Carrito> carritos = carritoRepository.findByUsuarioId(usuarioId);
-
-        // Si la lista está vacía, retornar Optional.empty()
-        if (carritos.isEmpty()) {
-            return Optional.empty();
+        if (!carritos.isEmpty()) {
+            Carrito carrito = carritos.get(0); // Tomamos el primer carrito de la lista
+            carritoCacheService.addToCache("carrito:" + usuarioId, carrito);
+            return carritos.stream().filter(Carrito::isActivo).findFirst();
         }
-
-        // Si hay al menos un carrito, tomar el primero
-        Carrito carrito = carritos.get(0);
-
-        // Agregar el carrito a la caché
-        carritoCacheService.addToCache("carrito:" + usuarioId, carrito);
-
-        // Retornar el carrito envuelto en un Optional
-        return Optional.of(carrito);
+        return Optional.empty();
     }
 
     public void marcarCarritoComoCerrado(String usuarioId) {
-        // Obtener la lista de carritos asociados al usuario
+        Optional<Carrito> carritoOptional = obtenerCarritoPorUsuarioId(usuarioId);
+        carritoOptional.ifPresent(carrito -> {
+            carrito.setActivo(false); // Marcar el carrito como inactivo
+            carrito.setFechaModificacion(new Date()); // Actualizar la fecha de modificación
+            carritoRepository.save(carrito); // Guardar los cambios en la base de datos
+            
+            // Agregar console log para mostrar el cambio de estado
+            System.out.println("ID del carrito: " + carrito.getId() + " cambió su estado a inactivo.");
+        });
+    }
+
+    public void eliminarCarrito(String usuarioId) {
         List<Carrito> carritos = carritoRepository.findByUsuarioId(usuarioId);
-        // Iterar sobre los carritos y marcarlos como cerrados
         for (Carrito carrito : carritos) {
-            carrito.setActivo(false); // Modificado para usar booleano
+            carrito.setActivo(false);
             carritoRepository.save(carrito);
         }
     }
 
-    public void eliminarCarrito(String usuarioId) {
-        String cacheKey = "carrito:" + usuarioId;
-        List<Carrito> carritos = carritoRepository.findByUsuarioId(usuarioId);
-        carritoRepository.deleteAll(carritos);
-        carritoCacheService.removeFromCache(cacheKey);
-    }
 
     public List<Carrito> getAllCarritos() {
         return carritoRepository.findAll();
     }
 
+    
     // Método para agregar IDs de carritoProducto al carrito
-    public void agregarIdsCarritoProductoAlCarrito(Carrito carrito, List<String> carritoProductoIds) {
-        // Asignar la lista de IDs de carritoProducto al carrito
-        carrito.setCarritoProductoId(carritoProductoIds);
-        // Actualizar el carrito en la base de datos
-        actualizarCarrito(carrito);
+    public void agregarIdsCarritoProductoAlCarrito(String carritoId, List<String> idsCarritoProducto) {
+        // Obtener el carrito por su ID
+        Optional<Carrito> carritoOptional = carritoRepository.findById(carritoId);
+        if (carritoOptional.isPresent()) {
+            Carrito carrito = carritoOptional.get();
+            
+            // Obtener la lista actual de IDs de productos del carrito y agregar los nuevos IDs
+            List<String> carritoProductoIds = carrito.getCarritoProductoId();
+            carritoProductoIds.addAll(idsCarritoProducto);
+            
+            // Actualizar el carrito con los nuevos IDs de productos
+            carrito.setCarritoProductoId(carritoProductoIds);
+            carritoRepository.save(carrito);
+        } else {
+            throw new IllegalStateException("No se encontró el carrito con el ID proporcionado.");
+        }
     }
 
     public void eliminarCarritoProductoDelCarrito(String usuarioId, String carritoProductoId) {
@@ -114,4 +125,17 @@ public class CarritoService {
         // Crear un nuevo carrito
         return crearCarrito(carritoAnterior.getUsuarioId());
     }
+
+
+    public Carrito modificarEstadoCarrito(String usuarioId, String estado) {
+        List<Carrito> carritos = carritoRepository.findByUsuarioId(usuarioId);
+        for (Carrito carrito : carritos) {
+            carrito.setActivo("activo".equals(estado));
+            carrito.setFechaModificacion(new Date());
+            carritoRepository.save(carrito);
+        }
+        return carritos.isEmpty() ? null : carritos.get(0);
+    }
+    
+
 }

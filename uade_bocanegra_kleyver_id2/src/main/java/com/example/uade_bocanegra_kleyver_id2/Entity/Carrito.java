@@ -1,22 +1,36 @@
 package com.example.uade_bocanegra_kleyver_id2.Entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "carritos")
+import jakarta.persistence.ElementCollection;
+
+@Document(collection = "carrito")
 public class Carrito {
 
     @Id
     private String id;
     private String usuarioId;
+    @ElementCollection
     private List<String> carritoProductoId; // Cambiado a List<String> para almacenar los IDs de los productos
     private Date fechaCreacion;
     private Date fechaModificacion;
     private boolean activo;
     private double precioTotal; // Nuevo campo para el precio total del carrito
+
+
+        // Constructor
+    public Carrito() {
+        // Inicializar la lista si es null
+        if (this.carritoProductoId == null) {
+            this.carritoProductoId = new ArrayList<>();
+        }
+    }
+
 
     // Getters y Setters
 

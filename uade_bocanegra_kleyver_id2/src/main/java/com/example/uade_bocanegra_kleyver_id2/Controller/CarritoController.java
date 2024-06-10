@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.uade_bocanegra_kleyver_id2.Entity.Carrito;
@@ -44,14 +46,19 @@ public class CarritoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(carritoNuevo);
     }
 
+    @PutMapping("/{usuarioId}")
+    public ResponseEntity<Carrito> modificarEstadoCarrito(@PathVariable String usuarioId, @RequestParam String estado) {
+        Carrito carritoModificado = carritoService.modificarEstadoCarrito(usuarioId, estado);
+        return ResponseEntity.ok(carritoModificado);
+    }
+
     @PostMapping("/{usuarioId}/carritoProducto")
     public ResponseEntity<Carrito> agregarCarritoProductoAlCarrito(@PathVariable String usuarioId, @RequestBody List<String> idsCarritoProducto) {
         Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioId);
         if (carritoOptional.isPresent()) {
-            Carrito carrito = carritoOptional.get();
-            // Lógica para agregar IDs de carritoProducto al carrito
-            carritoService.agregarIdsCarritoProductoAlCarrito(carrito, idsCarritoProducto);
-            return ResponseEntity.ok(carrito);
+            String carritoId = carritoOptional.get().getId(); // Obtener el ID del carrito
+            carritoService.agregarIdsCarritoProductoAlCarrito(carritoId, idsCarritoProducto);
+            return ResponseEntity.ok(carritoOptional.get());
         } else {
             return ResponseEntity.notFound().build();
         }

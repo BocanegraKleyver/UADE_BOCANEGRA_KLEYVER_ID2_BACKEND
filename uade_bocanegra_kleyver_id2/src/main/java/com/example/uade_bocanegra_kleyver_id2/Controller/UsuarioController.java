@@ -78,6 +78,7 @@ private UsuarioActividadService usuarioActividadService;
             if (!carritoOptional.isPresent()) {
                 // Crear el carrito para el usuario si aún no tiene uno
                 carritoService.crearCarrito(usuarioAutenticado.getId());
+                System.out.println("Carrito creado al iniciar sesión para usuario: " + usuarioAutenticado.getId());
             }
             
             // Crear la sesión para el usuario
@@ -93,22 +94,30 @@ private UsuarioActividadService usuarioActividadService;
         }
     }
     
+    
+    
 
 
     
-@PostMapping("/logout")
-public ResponseEntity<?> logoutUsuario() {
-    // Aquí deberías obtener el ID del usuario que cierra sesión desde tu sistema de autenticación
-    String usuarioId = "obtener desde tu sistema de autenticación";
+    @PostMapping("/logout")
+    public ResponseEntity<?> logoutUsuario(@RequestBody Usuario usuario) {
+        // Aquí deberías obtener el ID del usuario que cierra sesión desde tu sistema de autenticación
+        String usuarioId = usuario.getId();
+        
+        // Marcar el carrito asociado al usuario como cerrado
+        carritoService.marcarCarritoComoCerrado(usuarioId);
+        
+        // Imprimir el mensaje con el ID del carrito creado al iniciar sesión
+        Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioId);
+        carritoOptional.ifPresent(carrito -> System.out.println("Carrito " + (carrito.isActivo() ? "cambiado de estado a cerrado" : "marcado como cerrado") + " para usuario: " + usuarioId + ", ID del carrito: " + carrito.getId()));
+        
+           // Imprimir mensaje de cierre de sesión
+    System.out.println("Usuario con ID: " + usuarioId + " ha cerrado su sesión");
     
-    // Marcar el carrito asociado al usuario como cerrado
-    carritoService.marcarCarritoComoCerrado(usuarioId);
-    
-    // Aquí podrías agregar más lógica de cierre de sesión, como limpiar los datos de sesión o invalidar el token de autenticación
-    
-    return ResponseEntity.ok().build();
-}
-
+        // Aquí podrías agregar más lógica de cierre de sesión, como limpiar los datos de sesión o invalidar el token de autenticación
+        
+        return ResponseEntity.ok().build();
+    }
 
 
 

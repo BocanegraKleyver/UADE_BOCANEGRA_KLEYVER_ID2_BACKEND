@@ -17,3 +17,4 @@ Legajo: 1116590
 13: Registro datos en Actividadusuario
 14: Modificacion de carrito , carrito producto
 15: Funcion del ID usuario en el navbar
+16: logica de carrito correcto.
