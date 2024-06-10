@@ -63,7 +63,9 @@ public class CarritoController {
             return ResponseEntity.notFound().build();
         }
     }
+
     
+
     @DeleteMapping("/{usuarioId}/carritoProducto/producto/{productoId}")
     public ResponseEntity<Void> eliminarCarritoProductoDelCarrito(@PathVariable String usuarioId, @PathVariable String productoId) {
         // Llamar al método adecuado en el servicio

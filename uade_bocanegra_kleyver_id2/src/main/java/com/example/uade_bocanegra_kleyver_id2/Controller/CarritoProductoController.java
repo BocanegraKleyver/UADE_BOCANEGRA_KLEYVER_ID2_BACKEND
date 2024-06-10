@@ -44,6 +44,8 @@ public class CarritoProductoController {
         try {
             CarritoProducto savedProducto = carritoProductoService.agregarProductoAlCarrito(carritoId, productoRequest);
 
+            carritoService.agregarIdsCarritoProductoAlCarrito(carritoId, List.of(savedProducto.getId()));
+
             // Log para rastrear la acción de agregar un producto al carritoProducto
             System.out.println("carritoProducto agregado al carrito. ID del carrito: " + carritoId + ", ID del carritoProducto: " + savedProducto.getId());
 
@@ -55,8 +57,6 @@ public class CarritoProductoController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
-    
 
     @DeleteMapping("/producto/{id}")
     public ResponseEntity<Void> eliminarProductoDelCarritoProducto(@PathVariable String id) {

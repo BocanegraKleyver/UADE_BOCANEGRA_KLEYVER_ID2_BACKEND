@@ -24,26 +24,21 @@ public class CarritoProductoService {
         String productoId = productoRequest.getProductoId();
         int cantidad = productoRequest.getCantidad();
     
-        // Verificar si hay suficiente stock disponible
         if (!verificarStockDisponible(productoId, cantidad, carritoId)) {
             throw new IllegalStateException("No hay suficiente stock disponible para el producto solicitado");
         }
     
-        // Obtener el producto por su ID
         Optional<Producto> productoOptional = productoService.getProductoById(productoId);
         Producto producto = productoOptional.orElseThrow(() -> new IllegalArgumentException("El producto con el ID proporcionado no existe"));
     
-        // Calcular el precio del producto en el carrito
         double precioCarritoDelProducto = producto.getPrecio() * cantidad;
     
-        // Crear el carrito producto
         CarritoProducto carritoProducto = new CarritoProducto();
         carritoProducto.setProductoId(productoId);
         carritoProducto.setCantidad(cantidad);
         carritoProducto.setPrecioCarritoDelProducto(precioCarritoDelProducto);
         carritoProducto.setCarritoId(carritoId);
     
-        // Guardar el carrito producto en la base de datos
         return carritoProductoRepository.save(carritoProducto);
     }
     

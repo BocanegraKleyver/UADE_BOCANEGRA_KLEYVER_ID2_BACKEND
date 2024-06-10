@@ -1,14 +1,18 @@
 package com.example.uade_bocanegra_kleyver_id2.Service;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.uade_bocanegra_kleyver_id2.Entity.Carrito;
+import com.example.uade_bocanegra_kleyver_id2.Entity.CarritoProducto;
 import com.example.uade_bocanegra_kleyver_id2.Redis.CacheService;
+import com.example.uade_bocanegra_kleyver_id2.Repository.CarritoProductoRepository;
 import com.example.uade_bocanegra_kleyver_id2.Repository.CarritoRepository;
 
 @Service
@@ -19,6 +23,9 @@ public class CarritoService {
 
     @Autowired
     private CacheService<Carrito> carritoCacheService;
+     
+    @Autowired
+    private CarritoProductoRepository carritoProductoRepository;
 
     public List<Carrito> obtenerCarritosPorUsuarioId(String usuarioId) {
         return carritoRepository.findByUsuarioId(usuarioId);
@@ -86,33 +93,43 @@ public class CarritoService {
     }
 
     
-    // Método para agregar IDs de carritoProducto al carrito
+    // Método para agregar IDs de carritoProducto al carrito y actualizar el precio total
     public void agregarIdsCarritoProductoAlCarrito(String carritoId, List<String> idsCarritoProducto) {
-        // Obtener el carrito por su ID
         Optional<Carrito> carritoOptional = carritoRepository.findById(carritoId);
         if (carritoOptional.isPresent()) {
             Carrito carrito = carritoOptional.get();
-            
-            // Obtener la lista actual de IDs de productos del carrito y agregar los nuevos IDs
-            List<String> carritoProductoIds = carrito.getCarritoProductoId();
+            Set<String> carritoProductoIds = new HashSet<>(carrito.getCarritoProductoId());
             carritoProductoIds.addAll(idsCarritoProducto);
-            
-            // Actualizar el carrito con los nuevos IDs de productos
-            carrito.setCarritoProductoId(carritoProductoIds);
+            carrito.setCarritoProductoId(List.copyOf(carritoProductoIds)); // Convertir el Set a List
+            actualizarPrecioTotal(carrito);
             carritoRepository.save(carrito);
         } else {
             throw new IllegalStateException("No se encontró el carrito con el ID proporcionado.");
         }
     }
 
+     // Método para actualizar el precio total del carrito
+    private void actualizarPrecioTotal(Carrito carrito) {
+        double precioTotal = 0.0;
+        for (String carritoProductoId : carrito.getCarritoProductoId()) {
+            Optional<CarritoProducto> carritoProductoOpt = carritoProductoRepository.findById(carritoProductoId);
+            if (carritoProductoOpt.isPresent()) {
+                CarritoProducto carritoProducto = carritoProductoOpt.get();
+                precioTotal += carritoProducto.getPrecioCarritoDelProducto();
+            }
+        }
+        carrito.setPrecioTotal(precioTotal);
+    }
+
+
+    // Método para eliminar un producto del carrito y actualizar el precio total
     public void eliminarCarritoProductoDelCarrito(String usuarioId, String carritoProductoId) {
         Optional<Carrito> carritoOptional = obtenerCarritoPorUsuarioId(usuarioId);
         if (carritoOptional.isPresent()) {
             Carrito carrito = carritoOptional.get();
-            // Lógica para eliminar el carritoProducto del carrito por su ID
             carrito.getCarritoProductoId().removeIf(id -> id.equals(carritoProductoId));
-            // Actualizar el carrito en la base de datos
-            actualizarCarrito(carrito);
+            actualizarPrecioTotal(carrito);
+            carritoRepository.save(carrito);
         }
     }
 
