@@ -236,6 +236,8 @@ public void actualizarCarritoDespuesDeModificarCantidadProducto(String carritoId
     }
 }
 
-
-
+public Carrito obtenerCarritoPorIdcarrito(String carritoId) {
+    Optional<Carrito> carritoOptional = carritoRepository.findById(carritoId);
+    return carritoOptional.orElse(null); // Devuelve el carrito si está presente, o null si no se encuentra
+}
 }

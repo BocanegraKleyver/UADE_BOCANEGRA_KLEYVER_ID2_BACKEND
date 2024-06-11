@@ -17,5 +17,5 @@ public interface CarritoRepository extends MongoRepository<Carrito, String> {
     
     List<Carrito> findByCarritoProductoId(String carritoProductoId); // Método para buscar por carritoProductoId
     
-    // Otros métodos según sea necesario
+    
 }

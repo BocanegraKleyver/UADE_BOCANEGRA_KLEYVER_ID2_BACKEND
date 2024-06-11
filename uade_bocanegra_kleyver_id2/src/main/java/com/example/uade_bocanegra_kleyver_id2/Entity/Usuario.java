@@ -13,6 +13,7 @@ public class Usuario {
     private String id; // Cambiamos el tipo de id a String
 
     private String nombre;
+    private String apellido; // Nuevo campo para el apellido
     private String direccion;
     private String documentoIdentidad;
     private String categoria;
@@ -29,6 +30,7 @@ public class Usuario {
     public Usuario(
             @JsonProperty("id") String id, // Cambiamos el tipo de id a String
             @JsonProperty("nombre") String nombre,
+            @JsonProperty("apellido") String apellido,
             @JsonProperty("direccion") String direccion,
             @JsonProperty("documentoIdentidad") String documentoIdentidad,
             @JsonProperty("categoria") String categoria,
@@ -37,6 +39,7 @@ public class Usuario {
             @JsonProperty("email") String email) {
         this.id = id;
         this.nombre = nombre;
+        this.apellido = apellido;
         this.direccion = direccion;
         this.documentoIdentidad = documentoIdentidad;
         this.categoria = categoria;
@@ -60,6 +63,14 @@ public class Usuario {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
     public String getDireccion() {
