@@ -65,13 +65,11 @@ public class CarritoController {
     }
 
     
-
-    @DeleteMapping("/{usuarioId}/carritoProducto/producto/{productoId}")
-    public ResponseEntity<Void> eliminarCarritoProductoDelCarrito(@PathVariable String usuarioId, @PathVariable String productoId) {
-        // Llamar al método adecuado en el servicio
-        carritoService.eliminarCarritoProductoDelCarrito(usuarioId, productoId);
-        return ResponseEntity.noContent().build();
-    }
+    // @DeleteMapping("/{usuarioId}/carritoProducto/{carritoProductoId}")
+    // public ResponseEntity<Void> eliminarCarritoProductoDelCarrito(@PathVariable String usuarioId, @PathVariable String productoId) {
+    //     carritoService.eliminarCarritoProductoDelCarrito(usuarioId, productoId);
+    //     return ResponseEntity.noContent().build();
+    // }
 
     @DeleteMapping("/{usuarioId}")
     public ResponseEntity<Void> eliminarCarrito(@PathVariable String usuarioId) {

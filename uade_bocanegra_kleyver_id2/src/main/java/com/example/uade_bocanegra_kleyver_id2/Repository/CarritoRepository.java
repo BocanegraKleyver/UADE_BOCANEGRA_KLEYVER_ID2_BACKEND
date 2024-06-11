@@ -14,6 +14,8 @@ public interface CarritoRepository extends MongoRepository<Carrito, String> {
     List<Carrito> findByActivo(boolean activo);
 
     List<Carrito> findByFechaCreacionBetween(Date startDate, Date endDate);
-
+    
+    List<Carrito> findByCarritoProductoId(String carritoProductoId); // Método para buscar por carritoProductoId
+    
     // Otros métodos según sea necesario
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -60,7 +61,7 @@ public class CarritoProductoController {
 
     @DeleteMapping("/producto/{id}")
     public ResponseEntity<Void> eliminarProductoDelCarritoProducto(@PathVariable String id) {
-        carritoProductoService.eliminarProductoDelCarrito(id);
+        carritoProductoService.eliminarCarritoProductoDelCarrito(id);
 
         // Log para rastrear la acción de eliminar un producto del carritoProducto
         System.out.println("carritoProducto eliminado del carrito. ID del carritoProducto: " + id);
@@ -73,4 +74,45 @@ public class CarritoProductoController {
         Optional<CarritoProducto> carritoProducto = carritoProductoService.obtenerProductoEnCarrito(id);
         return carritoProducto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CarritoProducto> getCarritoProductoById(@PathVariable("id") String id) {
+        Optional<CarritoProducto> carritoProducto = carritoProductoService.getCarritoProductoById(id);
+        if (carritoProducto.isPresent()) {
+            return ResponseEntity.ok(carritoProducto.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/carrito/{carritoId}")
+    public ResponseEntity<List<CarritoProducto>> getCarritoProductoByCarritoId(@PathVariable String carritoId) {
+        List<CarritoProducto> carritoProductos = carritoProductoService.getCarritoProductoByCarritoId(carritoId);
+        return ResponseEntity.ok(carritoProductos);
+    }
+
+    @PutMapping("/{carritoProductoId}")
+    public ResponseEntity<CarritoProducto> modificarCantidadProductoEnCarrito(@PathVariable String carritoProductoId, @RequestBody CarritoProductoRequest carritoProductoRequest) {
+        CarritoProducto carritoProducto = carritoProductoService.modificarCantidadProductoEnCarrito(carritoProductoId, carritoProductoRequest.getCantidad());
+        return ResponseEntity.ok(carritoProducto);
+ 
+    }
+
+
+    @GetMapping("/carritoProducto/{carritoProductoId}")
+public ResponseEntity<CarritoProducto> obtenerCarritoProductoPorId(@PathVariable String carritoProductoId) {
+    Optional<CarritoProducto> carritoProducto = carritoProductoService.obtenerCarritoProductoPorId(carritoProductoId);
+    return carritoProducto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+}
+
+@DeleteMapping("/delete/{carritoProductoId}")
+public ResponseEntity<Void> eliminarCarritoProducto(@PathVariable String carritoProductoId) {
+    carritoProductoService.eliminarCarritoProductoDelCarrito(carritoProductoId);
+    
+    // Después de eliminar el CarritoProducto, actualiza el Carrito
+    carritoService.actualizarCarritoDespuesDeEliminarProducto(carritoProductoId);
+    
+    return ResponseEntity.noContent().build();
+}
+
 }
