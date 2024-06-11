@@ -11,6 +11,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.example.uade_bocanegra_kleyver_id2.Entity.Carrito;
 import com.example.uade_bocanegra_kleyver_id2.Entity.CarritoProducto;
+import com.example.uade_bocanegra_kleyver_id2.Entity.Pago;
 import com.example.uade_bocanegra_kleyver_id2.Entity.Pedido;
 import com.example.uade_bocanegra_kleyver_id2.Entity.Producto;
 import com.example.uade_bocanegra_kleyver_id2.Entity.Sesion;
@@ -80,6 +81,16 @@ public class RedisConfig {
     @Bean
     public RedisTemplate<String, Pedido> pedidoRedisTemplate() {
         RedisTemplate<String, Pedido> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        return template;
+    }
+
+
+    @Bean
+    public RedisTemplate<String, Pago> pagoRedisTemplate(){
+        RedisTemplate<String, Pago> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());

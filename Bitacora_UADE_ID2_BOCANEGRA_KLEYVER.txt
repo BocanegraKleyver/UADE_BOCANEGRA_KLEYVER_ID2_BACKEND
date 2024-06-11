@@ -21,3 +21,4 @@ Legajo: 1116590
 17: El login, logout, register, sesion y usuarioactividad (login logout) funcionan. Lo que sigue es validar los productos.
 18: Funciona la logica en el back, carrito, carritoProducto, producto. Siguiente porder realizar pedido .
 19: Anda el pedido, ahora vamos a pagar.
+21: Realizo pagar, falta facturar y confirmar la compra realizada.
