@@ -93,11 +93,14 @@ public class CarritoProductoController {
 
     @PutMapping("/{carritoProductoId}")
     public ResponseEntity<CarritoProducto> modificarCantidadProductoEnCarrito(@PathVariable String carritoProductoId, @RequestBody CarritoProductoRequest carritoProductoRequest) {
+        System.out.println("Modificando cantidad del producto en el carrito. ID del carritoProducto: " + carritoProductoId + ", Nueva cantidad: " + carritoProductoRequest.getCantidad());
         CarritoProducto carritoProducto = carritoProductoService.modificarCantidadProductoEnCarrito(carritoProductoId, carritoProductoRequest.getCantidad());
+    
+        // Actualizar el carrito después de modificar la cantidad del producto
+        carritoService.actualizarCarritoDespuesDeModificarCantidadProducto(carritoProducto.getCarritoId());
+    
         return ResponseEntity.ok(carritoProducto);
- 
     }
-
 
     @GetMapping("/carritoProducto/{carritoProductoId}")
 public ResponseEntity<CarritoProducto> obtenerCarritoProductoPorId(@PathVariable String carritoProductoId) {
@@ -106,13 +109,13 @@ public ResponseEntity<CarritoProducto> obtenerCarritoProductoPorId(@PathVariable
 }
 
 @DeleteMapping("/delete/{carritoProductoId}")
-public ResponseEntity<Void> eliminarCarritoProducto(@PathVariable String carritoProductoId) {
-    carritoProductoService.eliminarCarritoProductoDelCarrito(carritoProductoId);
-    
-    // Después de eliminar el CarritoProducto, actualiza el Carrito
-    carritoService.actualizarCarritoDespuesDeEliminarProducto(carritoProductoId);
-    
-    return ResponseEntity.noContent().build();
-}
+    public ResponseEntity<Void> eliminarCarritoProducto(@PathVariable String carritoProductoId) {
+        carritoProductoService.eliminarCarritoProductoDelCarrito(carritoProductoId);
+
+        // Después de eliminar el CarritoProducto, actualiza el Carrito
+        carritoService.actualizarCarritoDespuesDeEliminarProducto(carritoProductoId);
+
+        return ResponseEntity.noContent().build();
+    }
 
 }

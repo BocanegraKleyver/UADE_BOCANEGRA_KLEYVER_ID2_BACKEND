@@ -11,6 +11,7 @@ import com.example.uade_bocanegra_kleyver_id2.Entity.CarritoProducto;
 import com.example.uade_bocanegra_kleyver_id2.Entity.Producto;
 import com.example.uade_bocanegra_kleyver_id2.Repository.CarritoProductoRepository;
 import com.example.uade_bocanegra_kleyver_id2.Repository.CarritoRepository;
+import com.example.uade_bocanegra_kleyver_id2.Repository.ProductoRepository;
 import com.example.uade_bocanegra_kleyver_id2.Request.CarritoProductoRequest;
 
 @Service
@@ -24,6 +25,9 @@ public class CarritoProductoService {
 
     @Autowired
     private ProductoService productoService; // Asumiendo que tienes un servicio ProductoService
+
+        @Autowired
+    private ProductoRepository productoRepository;
 
     public CarritoProducto agregarProductoAlCarrito(String carritoId, CarritoProductoRequest productoRequest) {
         String productoId = productoRequest.getProductoId();
@@ -95,27 +99,28 @@ public List<CarritoProducto> getCarritoProductoByCarritoId(String carritoId) {
     return carritoProductoRepository.findByCarritoId(carritoId);
 }
 
+
 public CarritoProducto modificarCantidadProductoEnCarrito(String carritoProductoId, int nuevaCantidad) {
-    Optional<CarritoProducto> carritoProductoOptional = carritoProductoRepository.findById(carritoProductoId);
-    if (!carritoProductoOptional.isPresent()) {
-        throw new IllegalArgumentException("El producto en el carrito con el ID proporcionado no existe");
+    Optional<CarritoProducto> carritoProductoOpt = carritoProductoRepository.findById(carritoProductoId);
+    if (carritoProductoOpt.isPresent()) {
+        CarritoProducto carritoProducto = carritoProductoOpt.get();
+        carritoProducto.setCantidad(nuevaCantidad);
+        carritoProducto.setPrecioCarritoDelProducto(calcularNuevoPrecio(carritoProducto.getProductoId(), nuevaCantidad));
+        return carritoProductoRepository.save(carritoProducto);
+    } else {
+        throw new IllegalStateException("CarritoProducto not found");
     }
-
-    CarritoProducto carritoProducto = carritoProductoOptional.get();
-
-    // Verificar si hay suficiente stock disponible para la nueva cantidad
-    if (!verificarStockDisponible(carritoProducto.getProductoId(), nuevaCantidad, carritoProducto.getCarritoId())) {
-        throw new IllegalStateException("No hay suficiente stock disponible para la cantidad solicitada");
+}
+// Implementación del método para calcular el nuevo precio basado en la cantidad
+public double calcularNuevoPrecio(String productoId, int cantidad) { // Cambiado a public
+    // Aquí puedes agregar la lógica para calcular el nuevo precio.
+    // Por ejemplo, podrías obtener el precio del producto desde la base de datos y multiplicarlo por la cantidad.
+    Optional<Producto> productoOpt = productoRepository.findById(productoId);
+    if (productoOpt.isPresent()) {
+        Producto producto = productoOpt.get();
+        return producto.getPrecio() * cantidad;
     }
-
-    carritoProducto.setCantidad(nuevaCantidad);
-
-    // Actualizar el precio total del producto en el carrito
-    Optional<Producto> productoOptional = productoService.getProductoById(carritoProducto.getProductoId());
-    Producto producto = productoOptional.orElseThrow(() -> new IllegalArgumentException("El producto con el ID proporcionado no existe"));
-    carritoProducto.setPrecioCarritoDelProducto(producto.getPrecio() * nuevaCantidad);
-
-    return carritoProductoRepository.save(carritoProducto);
+    throw new IllegalStateException("Producto not found");
 }
 
 public Optional<CarritoProducto> obtenerCarritoProductoPorId(String carritoProductoId) {
@@ -126,32 +131,57 @@ public List<CarritoProducto> obtenerCarritoProductoPorCarritoId(String carritoId
     return carritoProductoRepository.findByCarritoId(carritoId);
 }
 
-// Método para actualizar el carrito después de eliminar un producto
-public void actualizarCarritoDespuesDeEliminarProducto(CarritoProducto carritoProducto) {        
+public void actualizarCarritoDespuesDeEliminarProducto(String carritoProductoId) {        
     // Encuentra todos los carritos que contienen el producto y actualiza sus listas
-    List<Carrito> carritos = carritoRepository.findByCarritoProductoId(carritoProducto.getId());
+    List<Carrito> carritos = carritoRepository.findByCarritoProductoId(carritoProductoId);
     carritos.forEach(carrito -> {
-        carrito.getCarritoProductoId().remove(carritoProducto.getId());
+        // Eliminar el producto del carrito
+        System.out.println("Antes de eliminar: " + carrito.getCarritoProductoId());
+        carrito.getCarritoProductoId().removeIf(id -> id.equals(carritoProductoId));
+        System.out.println("Después de eliminar: " + carrito.getCarritoProductoId());
         
         // Recalcular el precio total del carrito
         double precioTotal = carrito.getCarritoProductoId().stream()
-                .mapToDouble(this::obtenerPrecioProductoEnCarrito)
-                .sum();
-        carrito.setPrecioTotal(precioTotal);
+            .mapToDouble(this::obtenerPrecioProductoEnCarrito)
+            .sum();
         
+        System.out.println("Nuevo precio total del carrito: " + precioTotal);
+        
+        carrito.setPrecioTotal(precioTotal);
+
+        // Guardar el carrito actualizado
         carritoRepository.save(carrito);
     });
 }
 
-
-        // Método para obtener el precio de un producto en el carrito
-        private double obtenerPrecioProductoEnCarrito(String carritoProductoId) {
-            Optional<CarritoProducto> carritoProductoOptional = carritoProductoRepository.findById(carritoProductoId);
-            if (carritoProductoOptional.isPresent()) {
-                return carritoProductoOptional.get().getPrecioCarritoDelProducto();
-            }
-            return 0; // Si no se encuentra el producto, retornamos 0
+    // Método para obtener el precio de un producto en el carrito
+    private double obtenerPrecioProductoEnCarrito(String carritoProductoId) {
+        Optional<CarritoProducto> carritoProductoOptional = carritoProductoRepository.findById(carritoProductoId);
+        if (carritoProductoOptional.isPresent()) {
+            return carritoProductoOptional.get().getPrecioCarritoDelProducto();
         }
+        return 0; // Si no se encuentra el producto, retornamos 0
+    }
 
+
+    public void actualizarCarritoDespuesDeModificarCantidadProducto(String carritoId) {
+        Optional<Carrito> carritoOptional = carritoRepository.findById(carritoId);
+        if (carritoOptional.isPresent()) {
+            Carrito carrito = carritoOptional.get();
+    
+            // Recalcular el precio total del carrito
+            double precioTotal = carrito.getCarritoProductoId().stream()
+                .mapToDouble(this::obtenerPrecioProductoEnCarrito)
+                .sum();
+            
+            carrito.setPrecioTotal(precioTotal);
+    
+            // Guardar el carrito actualizado
+            carritoRepository.save(carrito);
+            
+            // Log para verificar el precio total actualizado
+            System.out.println("Precio total actualizado del carrito " + carritoId + ": " + precioTotal);
+        }
+    }
 
 }
