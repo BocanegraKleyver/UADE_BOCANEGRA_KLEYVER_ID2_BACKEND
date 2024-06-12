@@ -9,7 +9,7 @@ import com.example.uade_bocanegra_kleyver_id2.Entity.Sesion;
 
 public interface SesionRepository extends MongoRepository<Sesion, String> {
 
-    Optional<Sesion> findFirstByUsuarioIdAndFechaFinIsNullOrderByFechaInicioDesc(String usuarioId); // Corregido
+    Optional<Sesion> findFirstByUsuarioIdAndFechaFinIsNullOrderByFechaInicioDesc(String usuarioId);
     
     List<Sesion> findByUsuarioIdAndFechaFinIsNull(String usuarioId);
 }

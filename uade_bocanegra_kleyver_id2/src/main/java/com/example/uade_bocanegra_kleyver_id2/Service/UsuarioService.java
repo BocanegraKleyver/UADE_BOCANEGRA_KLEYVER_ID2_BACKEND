@@ -48,7 +48,7 @@ public class UsuarioService {
             usuario.setId(java.util.UUID.randomUUID().toString());
         }
         Usuario savedUsuario = usuarioRepository.save(usuario);
-        usuarioCacheService.addToCache(savedUsuario.getId(), savedUsuario); // No es necesario convertir el ID a String
+        usuarioCacheService.addToCache(savedUsuario.getId(), savedUsuario); 
         return savedUsuario;
     }
 
@@ -62,8 +62,8 @@ public class UsuarioService {
         if (existingUsuario != null) {
             updateUsuarioFields(existingUsuario, usuario);
             Usuario updatedUsuario = usuarioRepository.save(existingUsuario);
-            usuarioCacheService.removeFromCache(id); // Eliminar el usuario anterior de la caché
-            usuarioCacheService.addToCache(updatedUsuario.getId(), updatedUsuario); // Agregar el usuario actualizado a la caché
+            usuarioCacheService.removeFromCache(id); 
+            usuarioCacheService.addToCache(updatedUsuario.getId(), updatedUsuario);
             return updatedUsuario;
         } else {
             return null;
@@ -84,14 +84,14 @@ public class UsuarioService {
         if (Objects.nonNull(updatedUsuario.getNombre())) {
             existingUsuario.setNombre(updatedUsuario.getNombre());
         }
+        if (Objects.nonNull(updatedUsuario.getApellido())){
+            existingUsuario.setApellido(updatedUsuario.getApellido());
+        }
         if (Objects.nonNull(updatedUsuario.getDireccion())) {
             existingUsuario.setDireccion(updatedUsuario.getDireccion());
         }
         if (Objects.nonNull(updatedUsuario.getDocumentoIdentidad())) {
             existingUsuario.setDocumentoIdentidad(updatedUsuario.getDocumentoIdentidad());
-        }
-        if (Objects.nonNull(updatedUsuario.getCategoria())) {
-            existingUsuario.setCategoria(updatedUsuario.getCategoria());
         }
         if (Objects.nonNull(updatedUsuario.getUsuario())) {
             existingUsuario.setUsuario(updatedUsuario.getUsuario());

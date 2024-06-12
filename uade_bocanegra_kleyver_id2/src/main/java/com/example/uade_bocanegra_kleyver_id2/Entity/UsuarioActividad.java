@@ -10,15 +10,20 @@ public class UsuarioActividad {
 
     @Id
     private String id;
-    private String sesionId; // Referencia a la sesión
-    private String actividad; // Actividad del usuario
+    private String sesionId; 
+    private String actividad;
     private Date fecha;
 
-    // Constructor
-    public UsuarioActividad() {
+    
+    public UsuarioActividad() {}
+
+    public UsuarioActividad(String sesionId, String actividad, Date fecha) {
+        this.sesionId = sesionId;
+        this.actividad = actividad;
+        this.fecha = fecha;
     }
 
-    // Getters y Setters
+    
     public String getId() {
         return id;
     }

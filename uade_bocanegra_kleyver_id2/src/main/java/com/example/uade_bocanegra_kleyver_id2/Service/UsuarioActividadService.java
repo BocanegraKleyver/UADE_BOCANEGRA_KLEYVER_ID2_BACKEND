@@ -41,4 +41,9 @@ public class UsuarioActividadService {
         usuarioActividadRepository.deleteById(id);
         usuarioActividadCacheService.removeFromCache(id);
     }
+
+    public List<UsuarioActividad> obtenerActividadesPorSesion(String sesionId) {
+        return usuarioActividadRepository.findBySesionId(sesionId);
+    }
+
 }

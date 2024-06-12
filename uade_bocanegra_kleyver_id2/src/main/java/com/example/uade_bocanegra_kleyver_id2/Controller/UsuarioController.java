@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.uade_bocanegra_kleyver_id2.Entity.Carrito;
 import com.example.uade_bocanegra_kleyver_id2.Entity.Sesion;
 import com.example.uade_bocanegra_kleyver_id2.Entity.Usuario;
+import com.example.uade_bocanegra_kleyver_id2.Entity.UsuarioActividad;
 import com.example.uade_bocanegra_kleyver_id2.Redis.ContadorVisitasService;
 import com.example.uade_bocanegra_kleyver_id2.Service.CarritoService;
 import com.example.uade_bocanegra_kleyver_id2.Service.SesionService;
@@ -62,9 +63,15 @@ private UsuarioActividadService usuarioActividadService;
     }
 
     @PostMapping("/register") // Endpoint para registro de usuarios
-    public ResponseEntity<Usuario> registerUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<Map<String, Object>> registerUsuario(@RequestBody Usuario usuario) {
         Usuario nuevoUsuario = usuarioService.saveUsuario(usuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
+        carritoService.crearCarrito(nuevoUsuario.getId());
+        carritoService.marcarCarritoComoCerrado(nuevoUsuario.getId());
+        Sesion sesion = sesionService.iniciarSesion(nuevoUsuario);
+        UsuarioActividad nuevaActividad = usuarioActividadService.registrarActividad(sesion.getId(), "Usuario Registrado.");
+        // Cerrar sesión después del registro
+        sesionService.cerrarSesion(sesion.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("usuario", nuevoUsuario, "actividad", nuevaActividad)); 
     }
 
 
@@ -73,97 +80,62 @@ private UsuarioActividadService usuarioActividadService;
         boolean autenticacionExitosa = verificarCredenciales(usuario);
     
         if (autenticacionExitosa) {
-            // Obtener el usuario autenticado
             Usuario usuarioAutenticado = usuarioService.autenticarUsuario(usuario.getUsuario(), usuario.getPassword());
-    
-            // Verificar si el usuario ya tiene un carrito
-            Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioAutenticado.getId());
-    
+            Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioAutenticado.getId()); // Asegúrate de que aquí se esté utilizando el ID correcto
             if (!carritoOptional.isPresent()) {
-                // Crear el carrito para el usuario si aún no tiene uno
                 carritoService.crearCarrito(usuarioAutenticado.getId());
                 System.out.println("Carrito creado al iniciar sesión para usuario: " + usuarioAutenticado.getId());
             }
-    
-            // Crear la sesión para el usuario
-            Sesion sesion = sesionService.iniciarSesion(usuarioAutenticado);
-    
-        // Registrar la actividad de inicio de sesión en UsuarioActividad
-        usuarioActividadService.registrarActividad(sesion.getId(), "Inició sesión");
-
-    
-            // Enviar todos los datos del usuario
-            return ResponseEntity.ok(usuarioAutenticado);
+            Sesion sesion = sesionService.iniciarSesion(usuarioAutenticado);                                        
+            UsuarioActividad nuevaActividad = usuarioActividadService.registrarActividad(sesion.getId(), "Inició sesión");
+            return ResponseEntity.ok(Map.of("usuario", usuarioAutenticado, "actividad", nuevaActividad));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Usuario o contraseña incorrectos"));
         }
     }
-    
-    
-    
-
-
-    
+            
+            
     @PostMapping("/logout")
     public ResponseEntity<?> logoutUsuario(@RequestBody Usuario usuario) {
-        // Aquí deberías obtener el ID del usuario que cierra sesión desde tu sistema de autenticación
         String usuarioId = usuario.getId();
-        
-        // Marcar el carrito asociado al usuario como cerrado
         carritoService.marcarCarritoComoCerrado(usuarioId);
-        
-        // Imprimir el mensaje con el ID del carrito creado al iniciar sesión
         Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioId);
         carritoOptional.ifPresent(carrito -> System.out.println("Carrito " + (carrito.isActivo() ? "cambiado de estado a cerrado" : "marcado como cerrado") + " para usuario: " + usuarioId + ", ID del carrito: " + carrito.getId()));
         
-        // Obtener la sesión activa del usuario
         Sesion sesionActiva = sesionService.getSesionActivaByUsuarioId(usuarioId);
         
         if (sesionActiva != null) {
-            // Registrar la actividad de cierre de sesión en UsuarioActividad
             usuarioActividadService.registrarActividad(sesionActiva.getId(), "Cerró sesión");
-            
-            // Imprimir mensaje de cierre de sesión
             System.out.println("Usuario con ID: " + usuarioId + " ha cerrado su sesión");
-            
-            // Actualizar la fecha de fin de la sesión
             LocalDateTime now = LocalDateTime.now();
-            Date fechaFin = Date.from(now.atZone(ZoneId.systemDefault()).toInstant()); // Convierte LocalDateTime a Date
+            Date fechaFin = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
             sesionActiva.setFechaFin(fechaFin);
             sesionService.cerrarSesion(sesionActiva.getId());
         } else {
-            // Si no se encuentra una sesión activa, se devuelve un error
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró una sesión activa para el usuario");
-        }
-        
-        // Aquí podrías agregar más lógica de cierre de sesión, como limpiar los datos de sesión o invalidar el token de autenticación
-        
+        }    
         return ResponseEntity.ok().build();
     }
     
-    
 
-
-    // Método para verificar las credenciales
     private boolean verificarCredenciales(Usuario usuario) {
-        // Aquí deberías implementar la lógica para verificar si las credenciales son correctas
-        // Por ejemplo, podrías consultar en la base de datos si existe un usuario con las credenciales proporcionadas
-        // Retorna true si las credenciales son válidas, false si no lo son
-        // Aquí solo pongo un ejemplo simple, debes adaptarlo a tu lógica real
         Usuario usuarioEncontrado = usuarioService.getUsuarioByUsuario(usuario.getUsuario());
         return usuarioEncontrado != null && usuarioEncontrado.getPassword().equals(usuario.getPassword());
     }
 
     @PutMapping("/{id}")
     public Usuario updateUsuario(@PathVariable String id, @RequestBody Usuario usuario) {
-        return usuarioService.updateUsuario(id, usuario);
+        Usuario usuarioActualizado = usuarioService.updateUsuario(id, usuario);
+        Sesion sesionActiva = sesionService.getSesionActivaByUsuarioId(id);
+        if (sesionActiva != null) {
+            usuarioActividadService.registrarActividad(sesionActiva.getId(), "Actualizó sus datos");
+        }
+        return usuarioActualizado;
     }
 
     @DeleteMapping("/{id}")
     public void deleteUsuario(@PathVariable String id) {
         usuarioService.deleteUsuario(id);
     }
-
-
 
 }

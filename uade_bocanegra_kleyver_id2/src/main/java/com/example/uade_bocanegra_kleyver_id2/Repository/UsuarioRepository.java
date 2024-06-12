@@ -8,6 +8,5 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
     // Método para buscar un usuario por su nombre de usuario
     Usuario findByUsuario(String usuario);
 
-    // Método para autenticar un usuario por usuario y contraseña
     Usuario findByUsuarioAndPassword(String usuario, String password);
 }

@@ -11,18 +11,22 @@ public class Sesion {
     @Id
     private String id;
 
-    private String usuarioId; // Cambiamos ObjectId a String
+    private String usuarioId;
     private Date fechaInicio;
     private Date fechaFin;
+    private String categoriaSesion;
+    private long categoriaSesionTiempo;
 
     // Constructores
     public Sesion() {
     }
 
-    public Sesion(String usuarioId, Date fechaInicio, Date fechaFin) {
+    public Sesion(String usuarioId, Date fechaInicio, Date fechaFin,String categoriaSesion, long categoriaSesionTiempo) {
         this.usuarioId = usuarioId;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
+        this.categoriaSesion = categoriaSesion;
+        this.categoriaSesionTiempo = categoriaSesionTiempo;
     }
 
     // Getters y setters
@@ -56,5 +60,21 @@ public class Sesion {
 
     public void setFechaFin(Date fechaFin) {
         this.fechaFin = fechaFin;
+    }
+
+    public String getCategoriaSesion() {
+        return categoriaSesion;
+    }
+
+    public void setCategoriaSesion(String categoriaSesion) {
+        this.categoriaSesion = categoriaSesion;
+    }
+
+    public long getCategoriaSesionTiempo() {
+        return categoriaSesionTiempo;
+    }
+
+    public void setCategoriaSesionTiempo(long categoriaSesionTiempo) {
+        this.categoriaSesionTiempo = categoriaSesionTiempo;
     }
 }

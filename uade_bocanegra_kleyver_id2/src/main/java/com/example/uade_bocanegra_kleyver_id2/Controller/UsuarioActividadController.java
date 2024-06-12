@@ -26,26 +26,38 @@ public class UsuarioActividadController {
     private UsuarioActividadService usuarioActividadService;
 
     @GetMapping
-    public List<UsuarioActividad> getAllUsuarioActividades() {
-        return usuarioActividadService.getAllUsuarioActividades();
+    public ResponseEntity<List<UsuarioActividad>> getAllUsuarioActividades() {
+        List<UsuarioActividad> actividades = usuarioActividadService.getAllUsuarioActividades();
+        if (actividades.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(actividades);
     }
 
     @GetMapping("/{id}")
-    public UsuarioActividad getUsuarioActividadById(@PathVariable String id) {
-        return usuarioActividadService.getUsuarioActividadById(id);
+    public ResponseEntity<UsuarioActividad> getUsuarioActividadById(@PathVariable String id) {
+        UsuarioActividad actividad = usuarioActividadService.getUsuarioActividadById(id);
+        if (actividad == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(actividad);
     }
 
     @PostMapping("/registrar")
     public ResponseEntity<UsuarioActividad> registrarActividad(@RequestBody UsuarioActividad usuarioActividad) {
-        String sesionId = usuarioActividad.getSesionId(); // Obtener el ID de la sesión desde el objeto UsuarioActividad
-        String actividad = usuarioActividad.getActividad(); // Obtener la actividad del objeto UsuarioActividad
+        String sesionId = usuarioActividad.getSesionId(); 
+        String actividad = usuarioActividad.getActividad();
     
         UsuarioActividad nuevaActividad = usuarioActividadService.registrarActividad(sesionId, actividad);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevaActividad);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminarUsuarioActividad(@PathVariable String id) {
+    public ResponseEntity<Void> eliminarUsuarioActividad(@PathVariable String id) {
+        UsuarioActividad actividad = usuarioActividadService.getUsuarioActividadById(id);
+        if (actividad == null) {
+            return ResponseEntity.notFound().build();
+        }
         usuarioActividadService.deleteUsuarioActividad(id);
         return ResponseEntity.ok().build();
     }

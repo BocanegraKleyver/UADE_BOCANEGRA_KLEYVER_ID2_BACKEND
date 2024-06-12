@@ -3,6 +3,7 @@ package com.example.uade_bocanegra_kleyver_id2.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional; // Importa Optional de java.util
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class SesionService {
     }
 
     public Sesion iniciarSesion(Usuario usuario) {
-        Sesion sesion = new Sesion(usuario.getId(), new Date(), null); // Usar ID de usuario y fecha actual para iniciar sesión
+        Sesion sesion = new Sesion(usuario.getId(), new Date(), null,null,0); // Usar ID de usuario y fecha actual para iniciar sesión
         Sesion savedSesion = sesionRepository.save(sesion);
         sesionCacheService.addToCache(savedSesion.getId(), savedSesion);
         return savedSesion;
@@ -46,6 +47,19 @@ public class SesionService {
         if (existingSesionOptional.isPresent()) {
             Sesion existingSesion = existingSesionOptional.get();
             existingSesion.setFechaFin(new Date());
+
+            //2 - No uso minutos como ejemplo porque la demostracion es de menor tiempo. Usare segundos --> 30seg para low, 60 seg Medium, +60seg TOP
+            // Saco la categoria por sesion. Como quiero recuperar
+            long durationInMillis = existingSesion.getFechaFin().getTime() - existingSesion.getFechaInicio().getTime();
+            long durationInSeconds = TimeUnit.MILLISECONDS.toSeconds(durationInMillis);
+            if (durationInSeconds <= 30) {
+                existingSesion.setCategoriaSesion("LOW");
+            } else if (durationInSeconds <= 60) {
+                existingSesion.setCategoriaSesion("MEDIUM");
+            } else {
+                existingSesion.setCategoriaSesion("TOP");
+            }
+            existingSesion.setCategoriaSesionTiempo(durationInSeconds);
             sesionRepository.save(existingSesion);
             sesionCacheService.removeFromCache(id);
             return existingSesion;
