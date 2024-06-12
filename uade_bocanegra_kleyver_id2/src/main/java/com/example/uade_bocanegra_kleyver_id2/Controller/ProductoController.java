@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.uade_bocanegra_kleyver_id2.Entity.Producto;
 import com.example.uade_bocanegra_kleyver_id2.Service.ProductoService;
+import com.example.uade_bocanegra_kleyver_id2.Service.UsuarioActividadService;
 
 @RestController
 @RequestMapping("/api/producto")
@@ -26,6 +27,9 @@ public class ProductoController {
 
     @Autowired
     private ProductoService productoService;
+
+        @Autowired
+    private UsuarioActividadService usuarioActividadService;
 
     @GetMapping
     public ResponseEntity<List<Producto>> getAllProductos() {
@@ -41,24 +45,41 @@ public class ProductoController {
 
     @PostMapping
     public ResponseEntity<Producto> saveProducto(@RequestBody Producto producto) {
-        Producto savedProducto = productoService.saveProducto(producto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedProducto);
+        try {
+            Producto savedProducto = productoService.saveProducto(producto);
+            usuarioActividadService.registrarActividad("sesionId", "Se creó un nuevo producto con ID: " + savedProducto.getId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedProducto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Producto> updateProducto(@PathVariable String id, @RequestBody Producto producto) {
-        Optional<Producto> existingProducto = productoService.getProductoById(id);
-        if (existingProducto.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        try {
+            Optional<Producto> existingProducto = productoService.getProductoById(id);
+            if (existingProducto.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            producto.setId(id); // Asignamos el ID recibido en la URL al producto
+            Producto updatedProducto = productoService.saveProducto(producto);
+            usuarioActividadService.registrarActividad("sesionId", "Se actualizó el producto con ID: " + id);
+            return ResponseEntity.ok(updatedProducto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        producto.setId(id); // Asignamos el ID recibido en la URL al producto
-        Producto updatedProducto = productoService.saveProducto(producto);
-        return ResponseEntity.ok(updatedProducto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProducto(@PathVariable String id) {
-        productoService.deleteProducto(id);
-        return ResponseEntity.noContent().build();
+        try {
+            productoService.deleteProducto(id);
+            usuarioActividadService.registrarActividad("sesionId", "Se eliminó el producto con ID: " + id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.uade_bocanegra_kleyver_id2.Entity;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -13,16 +14,37 @@ public class Producto {
     private String nombre;
     private String descripcion;
     private double precio;
+    private double precioAnterior;
     private int cantidad;
     private String imagen;
-    private List<String> comentarios; // Cambiado a lista de comentarios
     private String video;
+    private List<String> comentarios;
+    private double descuento;
+    private Date fechaCarga;
+    private Date fechaModificacion;
 
-    // Constructor
+    // Constructor vacío
     public Producto() {
     }
 
+    // Constructor con parámetros
+    public Producto(String nombre, String descripcion, double precio,double precioAnterior, int cantidad, String imagen, String video,
+            List<String> comentarios, double descuento, Date fechaCarga, Date fechaModificacion) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+        this.precioAnterior = precioAnterior;
+        this.cantidad = cantidad;
+        this.imagen = imagen;
+        this.video = video;
+        this.comentarios = comentarios;
+        this.descuento = descuento;
+        this.fechaCarga = fechaCarga;
+        this.fechaModificacion = fechaModificacion;
+    }
+
     // Getters y Setters
+
     public String getId() {
         return id;
     }
@@ -55,6 +77,14 @@ public class Producto {
         this.precio = precio;
     }
 
+    public double getPrecioAnterior() {
+        return precioAnterior;
+    }
+
+    public void setPrecioAnterior(double precioAnterior) {
+        this.precioAnterior = precioAnterior;
+    }
+
     public int getCantidad() {
         return cantidad;
     }
@@ -71,6 +101,14 @@ public class Producto {
         this.imagen = imagen;
     }
 
+    public String getVideo() {
+        return video;
+    }
+
+    public void setVideo(String video) {
+        this.video = video;
+    }
+
     public List<String> getComentarios() {
         return comentarios;
     }
@@ -79,11 +117,29 @@ public class Producto {
         this.comentarios = comentarios;
     }
 
-    public String getVideo() {
-        return video;
+    public double getDescuento() {
+        return descuento;
     }
 
-    public void setVideo(String video) {
-        this.video = video;
+    public void setDescuento(double descuento) {
+        this.descuento = descuento;
+    }
+
+
+
+    public Date getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    public void setFechaModificacion(Date fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
+
+    public void setFechaCarga(Date fechaCarga) {
+        this.fechaCarga = fechaCarga;
+    }
+
+    public Date getFechaCarga() {
+        return fechaCarga;
     }
 }

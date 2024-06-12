@@ -12,5 +12,6 @@ public interface ProductoRepository extends MongoRepository<Producto, String> {
 
     List<Producto> findByPrecioLessThan(double precio);
 
-    // Otros métodos según sea necesario
+    List<Producto> findByNombreAndPrecio(String nombre, double precio);
+
 }
