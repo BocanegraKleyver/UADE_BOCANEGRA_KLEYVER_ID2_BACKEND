@@ -104,4 +104,18 @@ public class PagoService {
                 throw new RuntimeException("Pago no encontrado con ID: " + pagoId);
             }
         }
+
+
+            public void actualizarEstadoPago(String pagoId, String estadoPago) {
+        Optional<Pago> pagoOptional = pagoRepository.findById(pagoId);
+        if (pagoOptional.isPresent()) {
+            Pago pago = pagoOptional.get();
+            pago.setEstadoPago(estadoPago);
+            pagoRepository.save(pago);
+            // Aquí podrías agregar la lógica para actualizar la caché si lo deseas
+        } else {
+            // Manejar el caso cuando el pedido no se encuentra
+            System.out.println("No se encontró el pago con ID: " + pagoId);
+        }
+    }
 }

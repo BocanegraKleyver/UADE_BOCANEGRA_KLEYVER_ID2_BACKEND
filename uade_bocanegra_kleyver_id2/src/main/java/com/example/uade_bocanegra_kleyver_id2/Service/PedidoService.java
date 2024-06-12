@@ -2,6 +2,7 @@ package com.example.uade_bocanegra_kleyver_id2.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,17 +19,17 @@ public class PedidoService {
     @Autowired
     PedidoRepository pedidoRepository;
 
-    
     @Autowired
     CarritoService carritoService;
 
     @Autowired
     CacheService<Pedido> pedidoCacheService;
-
-
-
+    
     @Autowired
     private UsuarioService usuarioService; 
+
+
+
 
     public Pedido guardarPedido(String carritoId) {
         // Obtener el carrito por su ID
@@ -110,5 +111,20 @@ public class PedidoService {
     public List<Pedido> obtenerPedidosPorCarritoId(String carritoId) {
         return pedidoRepository.findByCarritoId(carritoId);
     }
+
+
+    public void actualizarEstadoPedido(String pedidoId, String estado) {
+        Optional<Pedido> pedidoOptional = pedidoRepository.findById(pedidoId);
+        if (pedidoOptional.isPresent()) {
+            Pedido pedido = pedidoOptional.get();
+            pedido.setEstado(estado);
+            pedidoRepository.save(pedido);
+            // Aquí podrías agregar la lógica para actualizar la caché si lo deseas
+        } else {
+            // Manejar el caso cuando el pedido no se encuentra
+            System.out.println("No se encontró el pedido con ID: " + pedidoId);
+        }
+    }
+
 
 }

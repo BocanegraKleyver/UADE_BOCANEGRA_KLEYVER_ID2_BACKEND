@@ -10,4 +10,5 @@ public interface PedidoRepository extends MongoRepository<Pedido, String> {
 
     List<Pedido> findByUsuarioId(String usuarioId);
     List<Pedido> findByCarritoId(String carritoId); 
+    
 }
