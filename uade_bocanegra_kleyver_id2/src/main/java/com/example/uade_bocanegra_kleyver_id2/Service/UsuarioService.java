@@ -102,5 +102,8 @@ public class UsuarioService {
         if (Objects.nonNull(updatedUsuario.getEmail())) {
             existingUsuario.setEmail(updatedUsuario.getEmail());
         }
+        if (Objects.nonNull(updatedUsuario.getRole())) {
+            existingUsuario.setRole(updatedUsuario.getRole());
+        }
     }
 }

@@ -18,7 +18,7 @@ public class Usuario {
     private String usuario;
     private String password;
     private String email;
-
+    private String role = "user";
     
     public Usuario() {
     }
@@ -33,6 +33,7 @@ public class Usuario {
             @JsonProperty("documentoIdentidad") String documentoIdentidad,
             @JsonProperty("usuario") String usuario,
             @JsonProperty("password") String password,
+            @JsonProperty("role") String role,
             @JsonProperty("email") String email) {
         this.id = id;
         this.nombre = nombre;
@@ -107,5 +108,13 @@ public class Usuario {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
