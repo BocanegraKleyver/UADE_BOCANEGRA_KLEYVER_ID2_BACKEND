@@ -38,8 +38,7 @@ public class PagoController {
         Optional<Pago> pago = pagoService.getPagoById(id);
         return pago.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-    @PostMapping
+    @PostMapping("/crear/")
     public ResponseEntity<Pago> savePago(@RequestBody Pago pago) {
         Pago savedPago = pagoService.savePago(pago);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPago);
