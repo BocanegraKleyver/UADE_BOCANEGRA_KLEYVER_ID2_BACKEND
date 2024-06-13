@@ -90,6 +90,7 @@ public class CarritoProductoController {
         List<CarritoProducto> carritoProductos = carritoProductoService.getCarritoProductoByCarritoId(carritoId);
         return ResponseEntity.ok(carritoProductos);
     }
+    
 
     @PutMapping("/{carritoProductoId}")
     public ResponseEntity<CarritoProducto> modificarCantidadProductoEnCarrito(@PathVariable String carritoProductoId, @RequestBody CarritoProductoRequest carritoProductoRequest) {

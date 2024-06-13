@@ -72,6 +72,25 @@ public class ProductoController {
         }
     }
 
+    @PutMapping("/{id}/comentario")
+public ResponseEntity<Producto> agregarComentario(@PathVariable String id, @RequestBody String comentario) {
+    try {
+        Optional<Producto> existingProducto = productoService.getProductoById(id);
+        if (existingProducto.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Producto producto = existingProducto.get();
+        producto.getComentarios().add(comentario); // Agregar el comentario al producto
+        Producto updatedProducto = productoService.saveProducto(producto);
+        usuarioActividadService.registrarActividad("sesionId", "Se agregó un comentario al producto con ID: " + id);
+        return ResponseEntity.ok(updatedProducto);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
+
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProducto(@PathVariable String id) {
         try {
