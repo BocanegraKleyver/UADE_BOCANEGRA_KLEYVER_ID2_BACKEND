@@ -28,3 +28,4 @@ Legajo: 1116590
 24: Se comienza la validacion del cargarProducto. Solo admin ve el screen, users normales no.
 26: Productodetalle frontend.
 27: Factura frontend
+28: Factura frontend imprime.
