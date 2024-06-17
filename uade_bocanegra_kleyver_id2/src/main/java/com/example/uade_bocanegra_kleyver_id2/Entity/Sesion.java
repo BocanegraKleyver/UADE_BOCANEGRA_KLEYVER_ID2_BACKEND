@@ -21,7 +21,8 @@ public class Sesion {
     public Sesion() {
     }
 
-    public Sesion(String usuarioId, Date fechaInicio, Date fechaFin,String categoriaSesion, long categoriaSesionTiempo) {
+    public Sesion(String usuarioId, Date fechaInicio, Date fechaFin, String categoriaSesion,
+            long categoriaSesionTiempo) {
         this.usuarioId = usuarioId;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;

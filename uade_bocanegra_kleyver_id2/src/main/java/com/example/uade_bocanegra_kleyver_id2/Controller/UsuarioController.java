@@ -1,6 +1,5 @@
 package com.example.uade_bocanegra_kleyver_id2.Controller;
 
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -33,7 +32,8 @@ import com.example.uade_bocanegra_kleyver_id2.Service.UsuarioService;
 
 @RestController
 @RequestMapping("/api/usuario")
-@CrossOrigin(origins = "http://localhost:3000") // Habilitar CORS para permitir solicitudes desde el frontend en el puerto 3000
+@CrossOrigin(origins = "http://localhost:3000") // Habilitar CORS para permitir solicitudes desde el frontend en el
+                                                // puerto 3000
 public class UsuarioController {
 
     @Autowired
@@ -45,8 +45,8 @@ public class UsuarioController {
     @Autowired
     private CarritoService carritoService;
 
-@Autowired
-private UsuarioActividadService usuarioActividadService;
+    @Autowired
+    private UsuarioActividadService usuarioActividadService;
 
     @Autowired
     private ContadorVisitasService contadorVisitasService;
@@ -68,42 +68,55 @@ private UsuarioActividadService usuarioActividadService;
         carritoService.crearCarrito(nuevoUsuario.getId());
         carritoService.marcarCarritoComoCerrado(nuevoUsuario.getId());
         Sesion sesion = sesionService.iniciarSesion(nuevoUsuario);
-        UsuarioActividad nuevaActividad = usuarioActividadService.registrarActividad(sesion.getId(), "Usuario Registrado.");
+        UsuarioActividad nuevaActividad = usuarioActividadService.registrarActividad(sesion.getId(),
+                "Usuario Registrado.");
         // Cerrar sesión después del registro
         sesionService.cerrarSesion(sesion.getId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("usuario", nuevoUsuario, "actividad", nuevaActividad)); 
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Map.of("usuario", nuevoUsuario, "actividad", nuevaActividad));
     }
-
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUsuario(@RequestBody Usuario usuario) {
         boolean autenticacionExitosa = verificarCredenciales(usuario);
-    
+
         if (autenticacionExitosa) {
             Usuario usuarioAutenticado = usuarioService.autenticarUsuario(usuario.getUsuario(), usuario.getPassword());
-            Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioAutenticado.getId()); // Asegúrate de que aquí se esté utilizando el ID correcto
+            Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioAutenticado.getId()); // Asegúrate
+                                                                                                                       // de
+                                                                                                                       // que
+                                                                                                                       // aquí
+                                                                                                                       // se
+                                                                                                                       // esté
+                                                                                                                       // utilizando
+                                                                                                                       // el
+                                                                                                                       // ID
+                                                                                                                       // correcto
             if (!carritoOptional.isPresent()) {
                 carritoService.crearCarrito(usuarioAutenticado.getId());
                 System.out.println("Carrito creado al iniciar sesión para usuario: " + usuarioAutenticado.getId());
             }
-            Sesion sesion = sesionService.iniciarSesion(usuarioAutenticado);                                        
-            UsuarioActividad nuevaActividad = usuarioActividadService.registrarActividad(sesion.getId(), "Inició sesión");
+            Sesion sesion = sesionService.iniciarSesion(usuarioAutenticado);
+            UsuarioActividad nuevaActividad = usuarioActividadService.registrarActividad(sesion.getId(),
+                    "Inició sesión");
             return ResponseEntity.ok(Map.of("usuario", usuarioAutenticado, "actividad", nuevaActividad));
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Usuario o contraseña incorrectos"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Usuario o contraseña incorrectos"));
         }
     }
-            
-            
+
     @PostMapping("/logout")
     public ResponseEntity<?> logoutUsuario(@RequestBody Usuario usuario) {
         String usuarioId = usuario.getId();
         carritoService.marcarCarritoComoCerrado(usuarioId);
         Optional<Carrito> carritoOptional = carritoService.obtenerCarritoPorUsuarioId(usuarioId);
-        carritoOptional.ifPresent(carrito -> System.out.println("Carrito " + (carrito.isActivo() ? "cambiado de estado a cerrado" : "marcado como cerrado") + " para usuario: " + usuarioId + ", ID del carrito: " + carrito.getId()));
-        
+        carritoOptional.ifPresent(carrito -> System.out
+                .println("Carrito " + (carrito.isActivo() ? "cambiado de estado a cerrado" : "marcado como cerrado")
+                        + " para usuario: " + usuarioId + ", ID del carrito: " + carrito.getId()));
+
         Sesion sesionActiva = sesionService.getSesionActivaByUsuarioId(usuarioId);
-        
+
         if (sesionActiva != null) {
             usuarioActividadService.registrarActividad(sesionActiva.getId(), "Cerró sesión");
             System.out.println("Usuario con ID: " + usuarioId + " ha cerrado su sesión");
@@ -113,10 +126,9 @@ private UsuarioActividadService usuarioActividadService;
             sesionService.cerrarSesion(sesionActiva.getId());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró una sesión activa para el usuario");
-        }    
+        }
         return ResponseEntity.ok().build();
     }
-    
 
     private boolean verificarCredenciales(Usuario usuario) {
         Usuario usuarioEncontrado = usuarioService.getUsuarioByUsuario(usuario.getUsuario());
